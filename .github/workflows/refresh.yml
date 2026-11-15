@@ -35,6 +35,10 @@ jobs:
 
       - name: Fetch data, rerun analyses, build page
         run: python analysis/update.py
+        env:
+          TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
 
       - name: Commit new snapshots
         run: |

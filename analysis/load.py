@@ -7,8 +7,25 @@ def load(f):
     adj=r['indicators'].get('adjclose',[{}])[0].get('adjclose',q['close'])
     df=pd.DataFrame({'close':q['close'],'adj':adj,'vol':q['volume'],'high':q['high'],'low':q['low']},index=idx)
     return df[~df.index.duplicated(keep='last')].dropna(subset=['close'])
+def load_tiingo(f):
+    rows = json.load(open(f))
+    df = pd.DataFrame(rows)
+    df.index = pd.to_datetime(df['date']).dt.tz_localize(None).dt.normalize()
+    out = pd.DataFrame({'close': df['close'], 'adj': df['adjClose'], 'vol': df['volume'], 'high': df['high'], 'low': df['low']})
+    return out[~out.index.duplicated(keep='last')].dropna(subset=['close'])
+
 def all_px():
-    return {os.path.basename(f)[:-5]:load(f) for f in glob.glob(D+'/*.json')}
+    """Yahoo files for every ticker; where a Tiingo file exists and is at least as current, Tiingo replaces Yahoo."""
+    P = {os.path.basename(f)[:-5]: load(f) for f in glob.glob(D + '/*.json') if not os.path.basename(f).startswith('tiingo_')}
+    for f in glob.glob(D + '/tiingo_*.json'):
+        k = os.path.basename(f)[7:-5]
+        try:
+            tg = load_tiingo(f)
+            if k not in P or tg.index[-1] >= P[k].index[-1]:
+                P[k] = tg
+        except Exception:
+            pass
+    return P
 def us_px(field='adj'):
     """All series aligned to the US (SPY) trading calendar; foreign/holiday-only rows dropped, gaps forward-filled."""
     P = all_px()

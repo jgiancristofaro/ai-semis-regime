@@ -120,7 +120,7 @@ ol.src a{word-break:break-word}
       </dl>
       <div class="chips" aria-label="Signal status">
         <span class="pill"><i style="background:var(--crit)"></i>Regime <span data-live="score" data-fmt="int"></span>/5</span>
-        <span class="pill"><i style="background:var(--good)"></i>Valuation ~13.7x</span>
+        <span class="pill"><i style="background:var(--good)"></i>Valuation <span data-live="est.pe_cw" data-fmt="x1"></span></span>
         <span class="pill"><i style="background:var(--good)"></i>Estimates rising</span>
       </div>
     </aside>
@@ -128,7 +128,7 @@ ol.src a{word-break:break-word}
 
   <div class="tiles">
     <div class="tile"><div class="l">SOXX close, <span data-live="asof" data-fmt="dateShort"></span></div><div class="v"><span data-live="soxx" data-fmt="usd"></span></div><div class="tiny"><span data-live="dd" data-fmt="pct"></span> from <span data-live="peak_date" data-fmt="dateShort"></span> peak · <span data-live="ytd" data-fmt="pct0"></span> YTD</div></div>
-    <div class="tile"><div class="l">SOX forward P/E</div><div class="v">~13.7x</div><div class="tiny">vs ~19x 10-yr avg, ~26x mid-2026 (secondary)</div></div>
+    <div class="tile"><div class="l">Chip basket forward P/E</div><div class="v"><span data-live="est.pe_cw" data-fmt="x1"></span></div><div class="tiny">18 largest US-listed chipmakers, cap-weighted (Finnhub) · ~26x mid-2026, ~19x 10-yr avg (secondary)</div></div>
     <div class="tile"><div class="l">Peak stretch above 200-day</div><div class="v"><span data-live="ext_peak" data-fmt="pct0"></span></div><div class="tiny"><span data-live="ext_peak_date" data-fmt="dateShort"></span> · prior record since 2001: <span data-live="ext_prior_max" data-fmt="pct0"></span> (2003)</div></div>
     <div class="tile"><div class="l">Regime score now</div><div class="v"><span data-live="score" data-fmt="int"></span> / 5</div><div class="tiny">50/200 death cross ~<span data-live="death_cross_flat" data-fmt="dateShort"></span> if flat</div></div>
   </div>
@@ -316,6 +316,12 @@ ol.src a{word-break:break-word}
         </ul>
         <p class="small"><b>Our read:</b> RSI is a 2027–28 upside option. It can also cut either way, because efficiency gains lower compute per task.</p></div>
     </div>
+    <div class="panel stack" id="capexPanel">
+      <h3>Hyperscaler capex, from SEC filings</h3>
+      <p class="small muted">Quarterly cash capex (purchases of property and equipment, excluding finance leases) for Microsoft, Alphabet, Amazon, Meta and Oracle, from their 10-Q and 10-K filings. Quarters are grouped by the calendar quarter in which each fiscal quarter ends.</p>
+      <div class="tiles" id="cxTiles" style="margin-top:0"></div>
+      <div class="chart md"><canvas id="cCapex" aria-label="Quarterly hyperscaler capex by company"></canvas></div>
+    </div>
     <div class="callout"><p><b>Why this matters for the stocks.</b> Supply is booked out: HBM through 2027+, CoWoS through mid-2027, and TrendForce sees 2027 HBM prices +121% <a href="#s5">[5]</a>. Extra demand in 2027 therefore shows up first as pricing power at the chokepoints (TSMC, memory) and as volume only in 2028. Street capex for 2027 (~$935B for the big four, +28%; over $1T including Oracle) looks low next to 5–7x token growth <a href="#s14">[14]</a>.</p></div>
   </section>
 
@@ -338,6 +344,15 @@ ol.src a{word-break:break-word}
           <tr><td>ASML</td><td>FY26 guide</td><td>€44–45B</td></tr>
         </table></div>
         <p class="tiny">Sources: company releases as reported <a href="#s7">[7]</a>.</p></div>
+    </div>
+    <div class="panel stack" id="liveval">
+      <h3>Live valuation: the 18 largest US-listed chipmakers</h3>
+      <p class="small muted">Daily from Finnhub's free data: forward P/E, market cap, analyst ratings and the latest earnings surprise. Market cap divided by forward P/E gives each company's consensus forward earnings in dollars, so the basket total tracks estimate revisions with no price effect. That history starts <span data-live="est.since" data-fmt="dateShort"></span> and grows each trading day.</p>
+      <div class="tiles" id="evTiles" style="margin-top:0"></div>
+      <div class="cols">
+        <div><div class="chart md"><canvas id="cFpe" aria-label="Forward P/E by company"></canvas></div><p class="tiny">Forward P/E as reported by Finnhub. Bar length is the multiple; hover for market cap, analyst Buy share and the last earnings surprise.</p></div>
+        <div><div class="chart md"><canvas id="cRev" aria-label="Basket forward earnings over time"></canvas></div><p class="tiny" id="revNote">Basket consensus forward earnings ($B). The kill switch trips on a cut of more than 10% within a quarter.</p></div>
+      </div>
     </div>
     <div class="callout"><p><b>The catch.</b> Micron trades at ~4x forward and memory at ~4x two-year-out earnings, which means the market is pricing about a 50% earnings fall (Goldman, as reported) <a href="#s7">[7]</a>. A cheap multiple on peak-cycle earnings is not cheap. Designers and foundry need only ~10% earnings declines to reach normal valuations. That is why we prefer TSM and the diversified ETF over memory.</p></div>
 
@@ -378,9 +393,9 @@ ol.src a{word-break:break-word}
     <div class="cols">
       <div class="panel stack"><h3>Kill criteria: stop adding if any trips</h3>
         <ul class="clean small">
-          <li>A top-5 hyperscaler <b>cuts</b> 2027 capex guidance (Q4 calls, late Jan–early Feb).</li>
+          <li>A top-5 hyperscaler <b>cuts</b> 2027 capex guidance (Q4 calls, late Jan–early Feb), or filed capex turns down year over year (latest: <span data-live="capex.q"></span> <span data-live="capex.total" data-fmt="busd"></span>, <span data-live="capex.yoy" data-fmt="pct0"></span> y/y).</li>
           <li>TSMC monthly revenue growth falls below <b>+20% y/y</b> (vs +59.7% in October).</li>
-          <li>Consensus SOX forward EPS revised down <b>more than 10%</b> in a quarter. That is the 2001/2008 signature.</li>
+          <li>Consensus forward earnings revised down <b>more than 10%</b> in a quarter. That is the 2001/2008 signature. Tracked live: basket forward earnings <span data-live="est.fwd_earn_busd" data-fmt="busd0"></span>, <span data-live="est.earn_chg" data-fmt="pct"></span> since <span data-live="est.since" data-fmt="dateShort"></span>.</li>
           <li>An AI-infrastructure credit event, such as a CoreWeave-type default or a failed data-center financing.</li>
           <li>10-year above <b>5.5%</b>, or the Fed signalling multiple further hikes.</li>
           <li>Broad credit cracks: the Baa–Treasury spread widens more than <b>0.30 pt in 3 months</b> (now <span data-live="credit.dbaa63_now" data-fmt="pts"></span>, level <span data-live="credit.baa.now" data-fmt="pct2"></span>).</li>
@@ -434,6 +449,7 @@ ol.src a{word-break:break-word}
       <li id="s14">SK hynix, Samsung and Micron investor commentary on HBM allocation; hyperscaler 2027 capex consensus (CNBC, Moody's ~$1T 2027). See compute-demand notes.</li>
       <li id="s15">OpenAI enterprise usage report (2026): Codex adoption by function.</li>
       <li id="s16"><a href="https://metr.org/blog/2026-01-29-time-horizon-1-1/" rel="noopener">METR Time Horizon 1.1</a>; <a href="https://metr.org/notes/2026-01-22-time-horizon-limitations/" rel="noopener">METR limitations note</a>.</li>
+      <li id="s18">Live data (refreshed daily): Tiingo end-of-day prices for US-listed tickers (Yahoo Finance as fallback and for indices, yields, oil and Korea); FRED for credit spreads, real yields and NFCI; Finnhub for forward P/E, market cap, analyst ratings and earnings surprises; SEC EDGAR XBRL for hyperscaler capex; iShares for SOXX shares outstanding.</li>
       <li id="s17">Price data: Yahoo Finance daily adjusted closes for SOXX, SOX, TSM, NVDA, AVGO, AMD, MU, ASML, SK hynix, Samsung, KOSPI, SPY, ^TNX and WTI. All backtests are the author's own calculations.</li>
     </ol>
   </section>
@@ -568,7 +584,7 @@ function drawPlanTbl(){const med=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const get=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
 const F={usd:v=>'$'+v.toFixed(2),usd0:v=>'$'+v.toFixed(0),pct:v=>pct(v,1),pct0:v=>pct(v,0),int:v=>String(Math.round(v)),
- date:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)+', '+y},dateShort:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)},list:v=>v.join(', '),pts:v=>(v>0?'+':'')+v.toFixed(2)+' pt',pct2:v=>v.toFixed(2)+'%',num2:v=>v.toFixed(2)};
+ date:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)+', '+y},dateShort:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)},list:v=>v.join(', '),pts:v=>(v>0?'+':'')+v.toFixed(2)+' pt',x1:v=>v.toFixed(1)+'x',busd:v=>'$'+v.toFixed(1)+'B',busd0:v=>'$'+v.toFixed(0)+'B',pct2:v=>v.toFixed(2)+'%',num2:v=>v.toFixed(2)};
 function bind(){document.querySelectorAll('[data-live]').forEach(el=>{const v=get(D.live,el.dataset.live);if(v==null)return;el.textContent=(F[el.dataset.fmt]||String)(v)})}
 
 // ---------- regime model ----------
@@ -630,7 +646,36 @@ function drawCrTbl(){const R=D.credit.results,W=['2026 YTD','2002-2025','2007-20
  Object.keys(R).forEach(k=>{h+=`<tr${k.startsWith('Baseline')?' class="hl"':''}><td class="txt">${k}</td>`+W.map(w=>{const x=R[k][w];return `<td><span class="${x.total>=0?'pos':'neg'}">${pct(x.total,0)}</span> · ${x.sharpe.toFixed(2)}</td>`}).join('')+'</tr>'});
  document.getElementById('crTbl').innerHTML=h}
 
-function all(){bind();drawCredit();drawCrTbl();drawReg();drawScore();drawWI();drawRide();drawBT();drawStats();drawGrid();drawExt();drawTrend();drawStrip();drawStates();drawBreadth();small('cTnx','TNX','--s8',v=>v.toFixed(2)+'%');small('cOil','CLF','--s4',v=>'$'+v.toFixed(1));drawSens();drawPE();drawScn();drawEntry();drawPlanTbl()}
+// ---------- live valuation (Finnhub) ----------
+function drawEst(){const E=D.est;const el=document.getElementById('liveval');if(!E){el.hidden=true;return}const L=D.live.est;
+ document.getElementById('evTiles').innerHTML=`<div class="tile"><div class="l">Forward P/E, cap-weighted</div><div class="v">${L.pe_cw.toFixed(1)}x</div><div class="tiny">median company ${L.pe_med.toFixed(1)}x</div></div>
+ <div class="tile"><div class="l">Basket forward earnings</div><div class="v">$${L.fwd_earn_busd.toFixed(0)}B</div><div class="tiny">${L.days>1?pct(L.earn_chg)+' since '+F.dateShort(L.since):'tracking since '+F.dateShort(L.since)}</div></div>
+ <div class="tile"><div class="l">Analysts rating Buy</div><div class="v">${(L.buy_share*100).toFixed(0)}%</div><div class="tiny">strong buy + buy, all 18 names</div></div>
+ <div class="tile"><div class="l">Cheapest / richest</div><div class="v" style="font-size:18px">${[...E.names].sort((a,b)=>a.fpe-b.fpe)[0].s} · ${[...E.names].sort((a,b)=>b.fpe-a.fpe)[0].s}</div><div class="tiny">${[...E.names].sort((a,b)=>a.fpe-b.fpe)[0].fpe.toFixed(1)}x vs ${[...E.names].sort((a,b)=>b.fpe-a.fpe)[0].fpe.toFixed(1)}x forward</div></div>`;
+ const N=[...E.names].sort((a,b)=>a.fpe-b.fpe);const hl=['NVDA','TSM','MU','AMD'];
+ mk('cFpe',{type:'bar',data:{labels:N.map(n=>n.s),datasets:[{data:N.map(n=>n.fpe),backgroundColor:N.map(n=>hl.includes(n.s)?css('--s1'):css('--neutral')),borderRadius:3,barThickness:10}]},
+  options:Object.assign(base(),{indexAxis:'y',interaction:{mode:'nearest',intersect:true},plugins:Object.assign(base().plugins,{tooltip:Object.assign(base().plugins.tooltip,{callbacks:{
+   label:i=>{const n=N[i.dataIndex];return [` ${n.fpe.toFixed(1)}x forward P/E`,` Mkt cap $${n.mcap_b>=1000?(n.mcap_b/1000).toFixed(2)+'T':n.mcap_b.toFixed(0)+'B'}`,` ${(n.buy*100).toFixed(0)}% Buy`,` Last surprise ${n.surp==null?'n/a':(n.surp>0?'+':'')+n.surp.toFixed(1)+'%'} (${n.lastq||''})`]}}})}),
+   scales:{x:Object.assign(base().scales.y,{min:0,ticks:Object.assign(base().scales.y.ticks,{callback:v=>v+'x'})}),y:Object.assign(base().scales.x,{ticks:{color:css('--ink-2'),font:{family:'JetBrains Mono',size:11},autoSkip:false}})}})});
+ const H=E.hist;
+ mk('cRev',{type:'line',data:{labels:H.map(h=>h.date),datasets:[line('Forward earnings',H.map(h=>h.fwd_earn_busd),css('--s3'),{pointRadius:H.length<20?3:0})]},
+  options:Object.assign(base(),{plugins:Object.assign(base().plugins,{tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` $${i.raw.toFixed(0)}B · P/E ${H[i.dataIndex].pe_cw.toFixed(1)}x`}})}),
+  scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(H[v].date)})}),y:Object.assign(base().scales.y,{ticks:Object.assign(base().scales.y.ticks,{callback:v=>'$'+v+'B'})})})})});
+ if(H.length<2)document.getElementById('revNote').textContent='Basket consensus forward earnings ($B). One day on file so far; the line builds up with each daily refresh. The kill switch trips on a cut of more than 10% within a quarter.'}
+// ---------- hyperscaler capex (SEC) ----------
+function drawCapex(){const C=D.capex,el=document.getElementById('capexPanel');
+ if(!C||!C.aggregate||!C.aggregate.length){document.getElementById('cxTiles').innerHTML='<p class="small muted">The capex series appears after the next scheduled refresh, which pulls the filings from the SEC.</p>';el.querySelector('.chart').hidden=true;return}
+ const A=C.aggregate.slice(-12),last=A[A.length-1];const co=[['MSFT','Microsoft','--s1'],['GOOGL','Alphabet','--s2'],['AMZN','Amazon','--s3'],['META','Meta','--s4'],['ORCL','Oracle','--s7']];
+ const ttm=A.slice(-4).reduce((s,r)=>s+r.total_busd,0),ttm0=A.length>=8?A.slice(-8,-4).reduce((s,r)=>s+r.total_busd,0):null;
+ document.getElementById('cxTiles').innerHTML=`<div class="tile"><div class="l">Latest quarter (${last.q})</div><div class="v">$${last.total_busd.toFixed(1)}B</div><div class="tiny">${last.yoy==null?'':pct(last.yoy,0)+' y/y'}</div></div>
+ <div class="tile"><div class="l">Trailing 4 quarters</div><div class="v">$${ttm.toFixed(0)}B</div><div class="tiny">${ttm0?pct(ttm/ttm0-1,0)+' vs prior 4':''}</div></div>
+ <div class="tile" style="grid-column:span 2"><div class="l">Latest quarter by company</div><div class="small mono" style="display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px">${co.map(([k,n])=>last[k]!=null?`<span>${n} $${last[k].toFixed(1)}B</span>`:'').join('')}</div></div>`;
+ mk('cCapex',{type:'bar',data:{labels:A.map(r=>r.q),datasets:co.map(([k,n,c])=>({label:n,data:A.map(r=>r[k]),backgroundColor:css(c),borderColor:css('--panel'),borderWidth:1,stack:'s'}))},
+  options:Object.assign(base(),{plugins:Object.assign(base().plugins,{legend:{display:true,position:'top',align:'end',labels:{color:css('--ink-2'),boxWidth:12,boxHeight:8,font:{family:'Inter',size:12}}},
+   tooltip:Object.assign(base().plugins.tooltip,{callbacks:{label:i=>` ${i.dataset.label}: $${(i.raw||0).toFixed(1)}B`,footer:i=>{const r=A[i[0].dataIndex];return `Total $${r.total_busd.toFixed(1)}B${r.yoy==null?'':' · '+pct(r.yoy,0)+' y/y'}`}}})}),
+   scales:{x:Object.assign(base().scales.x,{stacked:true}),y:Object.assign(base().scales.y,{stacked:true,ticks:Object.assign(base().scales.y.ticks,{callback:v=>'$'+v+'B'})})}})})}
+
+function all(){bind();drawEst();drawCapex();drawCredit();drawCrTbl();drawReg();drawScore();drawWI();drawRide();drawBT();drawStats();drawGrid();drawExt();drawTrend();drawStrip();drawStates();drawBreadth();small('cTnx','TNX','--s8',v=>v.toFixed(2)+'%');small('cOil','CLF','--s4',v=>'$'+v.toFixed(1));drawSens();drawPE();drawScn();drawEntry();drawPlanTbl()}
 perSel.value='2026 YTD';
 if(window.Chart){all()}else{bind();drawReg();drawCrTbl();document.querySelectorAll('.chart').forEach(c=>c.innerHTML='<p class="tiny">Charts could not load. The tables below still show the results.</p>');drawStats();drawGrid();drawStates();drawSens();drawScn();drawPlanTbl()}
 const re=()=>{if(window.Chart)all()};

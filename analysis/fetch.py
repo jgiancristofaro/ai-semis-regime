@@ -27,6 +27,28 @@ for t in TICKERS:
                 bad.append(f'{t}: {e}')
             time.sleep(2 ** attempt)
 
+# Tiingo (official EOD API, primary for US-listed tickers when a key is available; Yahoo stays as fallback)
+TIINGO = ['SOXX', 'SMH', 'TSM', 'NVDA', 'AVGO', 'AMD', 'MU', 'ASML', 'SPY', 'QQQ', 'SOXL']
+tkey = os.environ.get('TIINGO_API_KEY')
+tiingo_ok = set()
+if tkey:
+    for t_ in TIINGO:
+        for attempt in range(3):
+            try:
+                req = urllib.request.Request(f'https://api.tiingo.com/tiingo/daily/{t_}/prices?startDate=2000-01-01&format=json',
+                                             headers={'Authorization': f'Token {tkey}', 'User-Agent': 'ai-semis-regime/1.0'})
+                body = urllib.request.urlopen(req, timeout=60, context=ctx).read()
+                rows = json.loads(body); assert isinstance(rows, list) and len(rows) > 1000, 'too few rows'
+                with open(os.path.join(OUT, f'tiingo_{t_}.json'), 'wb') as f:
+                    f.write(body)
+                tiingo_ok.add(t_); break
+            except Exception as e:
+                if attempt == 2: print(f'tiingo {t_} failed: {e}')
+                time.sleep(2 ** attempt)
+    print('tiingo', len(tiingo_ok), 'of', len(TIINGO))
+# A Yahoo failure only counts when Tiingo didn't cover that ticker
+bad = [b for b in bad if b.split(':')[0] not in tiingo_ok]
+
 # FRED series (public CSV endpoint, no key): Baa-10y spread, HY OAS (3y history only), 10y real yield, Chicago Fed NFCI
 FRED = ['BAA10Y', 'BAMLH0A0HYM2', 'DFII10', 'NFCI']
 for sid in FRED:

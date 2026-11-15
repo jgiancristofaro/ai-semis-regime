@@ -39,8 +39,32 @@ if os.path.exists(sp):
     live['shares_out']=int(rows[-1]['shares_outstanding']); live['shares_asof']=rows[-1]['d']; live['shares_since']=rows[0]['d']; live['flow_days']=len(flows)
     live['flow_5d']=sum(f['flow_usd'] for f in flows[-5:]) if flows else None
 live['credit']=cr['dash']
+# Finnhub estimate snapshots: latest table + daily aggregates (revision history builds up over time)
+ep=os.path.join('..','research','snapshots','estimates.csv')
+est=None
+if os.path.exists(ep):
+    E=pd.read_csv(ep); E=E[E.forward_pe>0]
+    hist=[]
+    for d_,g in E.groupby('date'):
+        g=g.dropna(subset=['market_cap_musd','fwd_earnings_musd'])
+        b=(g.strong_buy+g.buy).sum(); n=(g.strong_buy+g.buy+g.hold+g.sell+g.strong_sell).sum()
+        hist.append({'date':d_,'pe_cw':float(g.market_cap_musd.sum()/g.fwd_earnings_musd.sum()),'pe_med':float(g.forward_pe.median()),
+                     'fwd_earn_busd':float(g.fwd_earnings_musd.sum()/1e3),'buy_share':float(b/n) if n else None,'n':int(len(g))})
+    last=E[E.date==E.date.max()].sort_values('market_cap_musd',ascending=False)
+    names=[{'s':r.symbol,'fpe':float(r.forward_pe),'mcap_b':float(r.market_cap_musd/1e3),
+            'buy':float((r.strong_buy+r.buy)/max(1,(r.strong_buy+r.buy+r.hold+r.sell+r.strong_sell))),
+            'surp':None if pd.isna(r.surprise_pct) else float(r.surprise_pct),'lastq':r.last_q} for r in last.itertuples()]
+    est={'hist':hist,'names':names}
+    h0,h1=hist[0],hist[-1]
+    live['est']={'pe_cw':h1['pe_cw'],'pe_med':h1['pe_med'],'fwd_earn_busd':h1['fwd_earn_busd'],'buy_share':h1['buy_share'],'date':h1['date'],
+                 'since':h0['date'],'days':len(hist),'earn_chg':h1['fwd_earn_busd']/h0['fwd_earn_busd']-1}
+# SEC capex
+cp=os.path.join('..','research','snapshots','capex.json')
+capex=json.load(open(cp)) if os.path.exists(cp) else None
+if capex and capex.get('aggregate'):
+    a_=capex['aggregate'][-1]; live['capex']={'q':a_['q'],'total':a_['total_busd'],'yoy':a_['yoy'],'asof':capex['asof']}
 D={
- 'live':live,'credit':{'results':cr['results'],'series':cr['series']},'flows':flows,'scoreHist':rn['score_hist'],
+ 'live':live,'est':est,'capex':capex,'credit':{'results':cr['results'],'series':cr['series']},'flows':flows,'scoreHist':rn['score_hist'],
  'd26':bt['dates2026'],'c26':{k:bt['curves2026'][k] for k in keep},'pos26':{k:bt['positions2026'][k] for k in keep},
  'stats':{k:bt['stats'][k] for k in keep},
  'ind':{k:bt['ind'][k] for k in ['soxx','sma50','sma200','ext200','ext_thr','score']},'comp':bt['components_hist'],

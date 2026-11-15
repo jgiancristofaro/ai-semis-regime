@@ -8,7 +8,7 @@ import json, os, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 os.chdir(HERE)
 steps = ([] if '--skip-fetch' in sys.argv else ['fetch.py']) + \
-        ['snapshot.py', 'backtest.py', 'deeper.py', 'grid.py', 'staged.py', 'regime_now.py', 'credit.py', 'bundle.py']
+        ['snapshot.py', 'estimates.py', 'capex.py', 'backtest.py', 'deeper.py', 'grid.py', 'staged.py', 'regime_now.py', 'credit.py', 'bundle.py']
 for s in steps:
     r = subprocess.run([sys.executable, s], capture_output=True, text=True)
     if r.returncode:
