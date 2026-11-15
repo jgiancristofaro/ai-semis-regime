@@ -1,0 +1,512 @@
+{
+ "companies": {
+  "MSFT": {
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+   "quarters": [
+    {
+     "end": "2022-12-31",
+     "capex_busd": 6.274
+    },
+    {
+     "end": "2023-03-31",
+     "capex_busd": 6.607
+    },
+    {
+     "end": "2023-06-30",
+     "capex_busd": 8.943
+    },
+    {
+     "end": "2023-09-30",
+     "capex_busd": 9.917
+    },
+    {
+     "end": "2023-12-31",
+     "capex_busd": 9.735
+    },
+    {
+     "end": "2024-03-31",
+     "capex_busd": 10.952
+    },
+    {
+     "end": "2024-06-30",
+     "capex_busd": 13.873
+    },
+    {
+     "end": "2024-09-30",
+     "capex_busd": 14.923
+    },
+    {
+     "end": "2024-12-31",
+     "capex_busd": 15.804
+    },
+    {
+     "end": "2025-03-31",
+     "capex_busd": 16.745
+    },
+    {
+     "end": "2025-06-30",
+     "capex_busd": 17.079
+    },
+    {
+     "end": "2025-09-30",
+     "capex_busd": 19.394
+    },
+    {
+     "end": "2025-12-31",
+     "capex_busd": 29.876
+    },
+    {
+     "end": "2026-03-31",
+     "capex_busd": 30.876
+    },
+    {
+     "end": "2026-06-30",
+     "capex_busd": 35.802
+    },
+    {
+     "end": "2026-09-30",
+     "capex_busd": 39.367
+    }
+   ]
+  },
+  "GOOGL": {
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+   "quarters": [
+    {
+     "end": "2022-12-31",
+     "capex_busd": 7.595
+    },
+    {
+     "end": "2023-03-31",
+     "capex_busd": 6.289
+    },
+    {
+     "end": "2023-06-30",
+     "capex_busd": 6.888
+    },
+    {
+     "end": "2023-09-30",
+     "capex_busd": 8.055
+    },
+    {
+     "end": "2023-12-31",
+     "capex_busd": 11.019
+    },
+    {
+     "end": "2024-03-31",
+     "capex_busd": 12.012
+    },
+    {
+     "end": "2024-06-30",
+     "capex_busd": 13.186
+    },
+    {
+     "end": "2024-09-30",
+     "capex_busd": 13.061
+    },
+    {
+     "end": "2024-12-31",
+     "capex_busd": 14.276
+    },
+    {
+     "end": "2025-03-31",
+     "capex_busd": 17.197
+    },
+    {
+     "end": "2025-06-30",
+     "capex_busd": 22.446
+    },
+    {
+     "end": "2025-09-30",
+     "capex_busd": 23.953
+    },
+    {
+     "end": "2025-12-31",
+     "capex_busd": 27.851
+    },
+    {
+     "end": "2026-03-31",
+     "capex_busd": 35.674
+    },
+    {
+     "end": "2026-06-30",
+     "capex_busd": 44.924
+    },
+    {
+     "end": "2026-09-30",
+     "capex_busd": 51.355
+    }
+   ]
+  },
+  "AMZN": {
+   "concept": "PaymentsToAcquireProductiveAssets",
+   "quarters": [
+    {
+     "end": "2022-12-31",
+     "capex_busd": 16.592
+    },
+    {
+     "end": "2023-03-31",
+     "capex_busd": 14.207
+    },
+    {
+     "end": "2023-06-30",
+     "capex_busd": 11.455
+    },
+    {
+     "end": "2023-09-30",
+     "capex_busd": 12.479
+    },
+    {
+     "end": "2023-12-31",
+     "capex_busd": 14.588
+    },
+    {
+     "end": "2024-03-31",
+     "capex_busd": 14.925
+    },
+    {
+     "end": "2024-06-30",
+     "capex_busd": 17.62
+    },
+    {
+     "end": "2024-09-30",
+     "capex_busd": 22.62
+    },
+    {
+     "end": "2024-12-31",
+     "capex_busd": 27.834
+    },
+    {
+     "end": "2025-03-31",
+     "capex_busd": 25.019
+    },
+    {
+     "end": "2025-06-30",
+     "capex_busd": 32.183
+    },
+    {
+     "end": "2025-09-30",
+     "capex_busd": 35.095
+    },
+    {
+     "end": "2025-12-31",
+     "capex_busd": 39.522
+    },
+    {
+     "end": "2026-03-31",
+     "capex_busd": 44.203
+    },
+    {
+     "end": "2026-06-30",
+     "capex_busd": 54.208
+    },
+    {
+     "end": "2026-09-30",
+     "capex_busd": 77.259
+    }
+   ]
+  },
+  "META": {
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+   "quarters": [
+    {
+     "end": "2022-12-31",
+     "capex_busd": 8.798
+    },
+    {
+     "end": "2023-03-31",
+     "capex_busd": 6.823
+    },
+    {
+     "end": "2023-06-30",
+     "capex_busd": 6.134
+    },
+    {
+     "end": "2023-09-30",
+     "capex_busd": 6.496
+    },
+    {
+     "end": "2023-12-31",
+     "capex_busd": 7.592
+    },
+    {
+     "end": "2024-03-31",
+     "capex_busd": 6.4
+    },
+    {
+     "end": "2024-06-30",
+     "capex_busd": 8.173
+    },
+    {
+     "end": "2024-09-30",
+     "capex_busd": 8.258
+    },
+    {
+     "end": "2024-12-31",
+     "capex_busd": 14.425
+    },
+    {
+     "end": "2025-03-31",
+     "capex_busd": 12.941
+    },
+    {
+     "end": "2025-06-30",
+     "capex_busd": 16.538
+    },
+    {
+     "end": "2025-09-30",
+     "capex_busd": 18.829
+    },
+    {
+     "end": "2025-12-31",
+     "capex_busd": 21.383
+    },
+    {
+     "end": "2026-03-31",
+     "capex_busd": 18.997
+    },
+    {
+     "end": "2026-06-30",
+     "capex_busd": 30.116
+    },
+    {
+     "end": "2026-09-30",
+     "capex_busd": 33.942
+    }
+   ]
+  },
+  "ORCL": {
+   "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+   "quarters": [
+    {
+     "end": "2022-11-30",
+     "capex_busd": 2.435
+    },
+    {
+     "end": "2023-02-28",
+     "capex_busd": 2.628
+    },
+    {
+     "end": "2023-05-31",
+     "capex_busd": 1.913
+    },
+    {
+     "end": "2023-08-31",
+     "capex_busd": 1.314
+    },
+    {
+     "end": "2023-11-30",
+     "capex_busd": 1.08
+    },
+    {
+     "end": "2024-02-29",
+     "capex_busd": 1.674
+    },
+    {
+     "end": "2024-05-31",
+     "capex_busd": 2.798
+    },
+    {
+     "end": "2024-08-31",
+     "capex_busd": 2.303
+    },
+    {
+     "end": "2024-11-30",
+     "capex_busd": 3.97
+    },
+    {
+     "end": "2025-02-28",
+     "capex_busd": 5.862
+    },
+    {
+     "end": "2025-05-31",
+     "capex_busd": 9.08
+    },
+    {
+     "end": "2025-08-31",
+     "capex_busd": 8.502
+    },
+    {
+     "end": "2025-11-30",
+     "capex_busd": 12.033
+    },
+    {
+     "end": "2026-02-28",
+     "capex_busd": 18.635
+    },
+    {
+     "end": "2026-05-31",
+     "capex_busd": 16.493
+    },
+    {
+     "end": "2026-08-31",
+     "capex_busd": 28.499
+    }
+   ]
+  }
+ },
+ "asof": "2026-09-30",
+ "aggregate": [
+  {
+   "q": "2022Q4",
+   "total_busd": 41.69,
+   "MSFT": 6.274,
+   "GOOGL": 7.595,
+   "AMZN": 16.592,
+   "META": 8.798,
+   "ORCL": 2.435,
+   "yoy": null
+  },
+  {
+   "q": "2023Q1",
+   "total_busd": 36.55,
+   "MSFT": 6.607,
+   "GOOGL": 6.289,
+   "AMZN": 14.207,
+   "META": 6.823,
+   "ORCL": 2.628,
+   "yoy": null
+  },
+  {
+   "q": "2023Q2",
+   "total_busd": 35.33,
+   "MSFT": 8.943,
+   "GOOGL": 6.888,
+   "AMZN": 11.455,
+   "META": 6.134,
+   "ORCL": 1.913,
+   "yoy": null
+  },
+  {
+   "q": "2023Q3",
+   "total_busd": 38.26,
+   "MSFT": 9.917,
+   "GOOGL": 8.055,
+   "AMZN": 12.479,
+   "META": 6.496,
+   "ORCL": 1.314,
+   "yoy": null
+  },
+  {
+   "q": "2023Q4",
+   "total_busd": 44.01,
+   "MSFT": 9.735,
+   "GOOGL": 11.019,
+   "AMZN": 14.588,
+   "META": 7.592,
+   "ORCL": 1.08,
+   "yoy": 0.0556
+  },
+  {
+   "q": "2024Q1",
+   "total_busd": 45.96,
+   "MSFT": 10.952,
+   "GOOGL": 12.012,
+   "AMZN": 14.925,
+   "META": 6.4,
+   "ORCL": 1.674,
+   "yoy": 0.2575
+  },
+  {
+   "q": "2024Q2",
+   "total_busd": 55.65,
+   "MSFT": 13.873,
+   "GOOGL": 13.186,
+   "AMZN": 17.62,
+   "META": 8.173,
+   "ORCL": 2.798,
+   "yoy": 0.5751
+  },
+  {
+   "q": "2024Q3",
+   "total_busd": 61.16,
+   "MSFT": 14.923,
+   "GOOGL": 13.061,
+   "AMZN": 22.62,
+   "META": 8.258,
+   "ORCL": 2.303,
+   "yoy": 0.5985
+  },
+  {
+   "q": "2024Q4",
+   "total_busd": 76.31,
+   "MSFT": 15.804,
+   "GOOGL": 14.276,
+   "AMZN": 27.834,
+   "META": 14.425,
+   "ORCL": 3.97,
+   "yoy": 0.7339
+  },
+  {
+   "q": "2025Q1",
+   "total_busd": 77.76,
+   "MSFT": 16.745,
+   "GOOGL": 17.197,
+   "AMZN": 25.019,
+   "META": 12.941,
+   "ORCL": 5.862,
+   "yoy": 0.6919
+  },
+  {
+   "q": "2025Q2",
+   "total_busd": 97.33,
+   "MSFT": 17.079,
+   "GOOGL": 22.446,
+   "AMZN": 32.183,
+   "META": 16.538,
+   "ORCL": 9.08,
+   "yoy": 0.749
+  },
+  {
+   "q": "2025Q3",
+   "total_busd": 105.77,
+   "MSFT": 19.394,
+   "GOOGL": 23.953,
+   "AMZN": 35.095,
+   "META": 18.829,
+   "ORCL": 8.502,
+   "yoy": 0.7294
+  },
+  {
+   "q": "2025Q4",
+   "total_busd": 130.66,
+   "MSFT": 29.876,
+   "GOOGL": 27.851,
+   "AMZN": 39.522,
+   "META": 21.383,
+   "ORCL": 12.033,
+   "yoy": 0.7122
+  },
+  {
+   "q": "2026Q1",
+   "total_busd": 148.38,
+   "MSFT": 30.876,
+   "GOOGL": 35.674,
+   "AMZN": 44.203,
+   "META": 18.997,
+   "ORCL": 18.635,
+   "yoy": 0.9082
+  },
+  {
+   "q": "2026Q2",
+   "total_busd": 181.54,
+   "MSFT": 35.802,
+   "GOOGL": 44.924,
+   "AMZN": 54.208,
+   "META": 30.116,
+   "ORCL": 16.493,
+   "yoy": 0.8652
+  },
+  {
+   "q": "2026Q3",
+   "total_busd": 230.42,
+   "MSFT": 39.367,
+   "GOOGL": 51.355,
+   "AMZN": 77.259,
+   "META": 33.942,
+   "ORCL": 28.499,
+   "yoy": 1.1785
+  }
+ ]
+}
