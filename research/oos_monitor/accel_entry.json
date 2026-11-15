@@ -1,0 +1,74 @@
+[
+ {
+  "date": "2002-07-23",
+  "dca4": 0.306,
+  "dca4_accel": 0.219,
+  "accel_day": 2
+ },
+ {
+  "date": "2003-01-23",
+  "dca4": 0.686,
+  "dca4_accel": 0.896,
+  "accel_day": 6
+ },
+ {
+  "date": "2004-07-26",
+  "dca4": 0.204,
+  "dca4_accel": 0.174,
+  "accel_day": 6
+ },
+ {
+  "date": "2006-07-21",
+  "dca4": 0.216,
+  "dca4_accel": 0.342,
+  "accel_day": 1
+ },
+ {
+  "date": "2008-01-03",
+  "dca4": -0.401,
+  "dca4_accel": -0.395,
+  "accel_day": 19
+ },
+ {
+  "date": "2008-07-07",
+  "dca4": -0.226,
+  "dca4_accel": -0.265,
+  "accel_day": 20
+ },
+ {
+  "date": "2009-01-06",
+  "dca4": 0.673,
+  "dca4_accel": 0.696,
+  "accel_day": 18
+ },
+ {
+  "date": "2011-08-08",
+  "dca4": 0.121,
+  "dca4_accel": 0.146,
+  "accel_day": 4
+ },
+ {
+  "date": "2020-03-12",
+  "dca4": 0.814,
+  "dca4_accel": 0.973,
+  "accel_day": 1
+ },
+ {
+  "date": "2022-04-27",
+  "dca4": 0.046,
+  "dca4_accel": 0.006,
+  "accel_day": 6
+ },
+ {
+  "date": "2022-10-27",
+  "dca4": 0.24,
+  "dca4_accel": 0.322,
+  "accel_day": 1
+ },
+ {
+  "date": "2025-04-03",
+  "dca4": 0.732,
+  "dca4_accel": 1.182,
+  "accel_day": 1
+ }
+]

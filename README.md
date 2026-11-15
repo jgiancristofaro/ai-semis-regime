@@ -65,6 +65,10 @@ The page is written to `site/index.html`. Use `--skip-fetch` to rebuild from dat
 | `analysis/bundle.py` | Packs all outputs into the page's data block |
 | `analysis/template.html` | The page; `update.py` injects data and writes `site/index.html` |
 
+## SOXX Regime Monitor, tested out of sample
+
+`research/oos_monitor/` runs the [SOXX Regime Monitor](https://github.com/jgiancristofaro/soxx-regime-monitor)'s state machine, unchanged, on SOXX for 2002–2025, then blends it with this repo's models. `oos_monitor.py` takes the path to a checkout of that repo. The daily pipeline (`analysis/monitor.py`) reads the monitor's live published state for the combined exposure signal and the re-entry watch list.
+
 ## Data notes
 
 | Source | Used for | Account needed |
@@ -72,6 +76,10 @@ The page is written to `site/index.html`. Use `--skip-fetch` to rebuild from dat
 | Yahoo Finance chart API | Daily prices for ETFs, stocks, indices, yields, oil | No |
 | FRED (St. Louis Fed) | Baa–10y spread, high-yield OAS, 10y real yield, NFCI | No |
 | iShares SOXX product page | Daily shares outstanding, for flows | No |
+| Tiingo | Primary daily prices for US-listed tickers | Free key (`TIINGO_API_KEY` secret) |
+| Finnhub | Forward P/E, market cap, analyst ratings, earnings surprises | Free key (`FINNHUB_API_KEY` secret) |
+| SEC EDGAR XBRL | Hyperscaler quarterly capex | Contact string (`SEC_USER_AGENT` secret) |
+| SOXX Regime Monitor | Live state, flow streams, re-entry lines | No (public JSON) |
 
 Some data has no free history, such as ETF shares outstanding. The workflow records those values each day in `research/snapshots/` and commits them, so the history grows over time.
 

@@ -1,0 +1,185 @@
+{
+ "last_session": "2026-11-13",
+ "data_stale": false,
+ "state": {
+  "machine": "EXIT",
+  "accum_overlay": false,
+  "since": "2026-11-03",
+  "position_multiplier": 0.0,
+  "suggested_size": 0.0,
+  "arm_mode_a": true,
+  "arm_mode_b": false,
+  "short_permission": {
+   "ma50_vol": false,
+   "id20_neg": true,
+   "on20_neg": true,
+   "all": false
+  }
+ },
+ "today": {
+  "close": 149.3,
+  "ret": -0.0367,
+  "id20": -0.062,
+  "on20": -0.0162,
+  "ret20": -0.0736,
+  "id20_z": -0.8195,
+  "on20_mom": 0.1166,
+  "dd20": -0.1419,
+  "vix_slope": 1.36,
+  "real_chg20": 0.12,
+  "ma20": 156.83,
+  "ma50": 171.88,
+  "ma200": 160.27,
+  "rv10": 0.9086,
+  "rv20": 0.7687,
+  "rv20_p90": 0.6989,
+  "turb": 1.0419,
+  "ar1": 0.0984,
+  "rsi14": 42.1394,
+  "dist20": 5,
+  "vrp": -0.2184,
+  "iv30_asof": "2026-11-14",
+  "gap_quality": "none",
+  "asia_on20": null,
+  "hollow_count20": 1,
+  "id20_pctl120": 0.4333,
+  "id20_is_sample_low": false,
+  "id20_is_sample_high": false,
+  "id20_history_months": 19
+ },
+ "trades": [
+  {
+   "date": "2026-02-05",
+   "price": 110.08,
+   "action": "EXIT",
+   "reason": "exec-into-strength"
+  },
+  {
+   "date": "2026-02-06",
+   "price": 115.97,
+   "action": "REENTER",
+   "reason": "disarm"
+  },
+  {
+   "date": "2026-06-18",
+   "price": 213.01,
+   "action": "EXIT",
+   "reason": "exec-into-strength"
+  },
+  {
+   "date": "2026-07-10",
+   "price": 193.65,
+   "action": "REENTER",
+   "reason": "disarm"
+  },
+  {
+   "date": "2026-07-14",
+   "price": 189.18,
+   "action": "EXIT",
+   "reason": "exec-into-strength"
+  },
+  {
+   "date": "2026-09-10",
+   "price": 172.36,
+   "action": "REENTER",
+   "reason": "disarm"
+  },
+  {
+   "date": "2026-10-20",
+   "price": 166.67,
+   "action": "EXIT",
+   "reason": "exec-into-strength"
+  },
+  {
+   "date": "2026-10-21",
+   "price": 170.12,
+   "action": "REENTER",
+   "reason": "disarm"
+  },
+  {
+   "date": "2026-10-26",
+   "price": 163.94,
+   "action": "EXIT",
+   "reason": "exec-into-strength"
+  },
+  {
+   "date": "2026-10-27",
+   "price": 170.35,
+   "action": "REENTER",
+   "reason": "disarm"
+  },
+  {
+   "date": "2026-11-03",
+   "price": 155.0,
+   "action": "EXIT",
+   "reason": "exec-into-strength"
+  }
+ ],
+ "checklist": [
+  {
+   "id": "id20",
+   "label": "Intraday 20d stream",
+   "value": -0.062,
+   "fmt": "pct1",
+   "status": "red",
+   "note": "negative = distribution (institutions selling intraday)"
+  },
+  {
+   "id": "on20",
+   "label": "Overnight 20d stream",
+   "value": -0.0162,
+   "fmt": "pct1",
+   "status": "red",
+   "note": "both streams negative (downtrend)"
+  },
+  {
+   "id": "ma",
+   "label": "Close vs 20-DMA",
+   "value": -0.048,
+   "fmt": "pct1",
+   "status": "red",
+   "note": "re-entry line 156.8"
+  },
+  {
+   "id": "rv20",
+   "label": "Realized vol (20d)",
+   "value": 0.7687,
+   "fmt": "pct0",
+   "status": "red",
+   "note": "regime normalizes < 50%; sets position size"
+  },
+  {
+   "id": "vrp",
+   "label": "IV30 \u2212 RV20",
+   "value": -0.2184,
+   "fmt": "pts",
+   "status": "amber",
+   "note": "puts cheap vs realized \u2014 hedge with options"
+  },
+  {
+   "id": "id20_z",
+   "label": "id20 z-score (252d)",
+   "value": -0.8195,
+   "fmt": "z",
+   "status": "amber",
+   "note": "approaching arm threshold"
+  },
+  {
+   "id": "on20_mom",
+   "label": "on20 momentum (5d)",
+   "value": 0.1166,
+   "fmt": "pct1",
+   "status": "green",
+   "note": "overnight bid momentum positive"
+  },
+  {
+   "id": "real_chg20",
+   "label": "Real yield \u039420d",
+   "value": 0.12,
+   "fmt": "bp",
+   "status": "amber",
+   "note": "rising real yields \u2014 headwind for growth/tech"
+  }
+ ],
+ "generated_utc": "2026-11-14T01:07:36Z"
+}

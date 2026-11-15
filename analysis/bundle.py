@@ -63,8 +63,22 @@ cp=os.path.join('..','research','snapshots','capex.json')
 capex=json.load(open(cp)) if os.path.exists(cp) else None
 if capex and capex.get('aggregate'):
     a_=capex['aggregate'][-1]; live['capex']={'q':a_['q'],'total':a_['total_busd'],'yoy':a_['yoy'],'asof':capex['asof']}
+# SOXX Regime Monitor (live state) + out-of-sample research results
+mp=os.path.join('..','research','snapshots','monitor_signals.json'); mon=None
+if os.path.exists(mp):
+    M=json.load(open(mp)); td=M['today']; stt=M['state']
+    mpos=1.0 if stt.get('accum_overlay') else {'RISK_ON':1.0,'MONITOR':0.6,'EXIT':0.0,'ACCUM':1.0}.get(stt['machine'],0.0)
+    s50=float(s.rolling(50).mean().iloc[-1]); s200_=float(s.rolling(200).mean().iloc[-1]); x5200=1.0 if s50>s200_ else 0.0
+    vol_scale=min(1.0,0.40/td['rv20']) if (td.get('rv20') and td.get('rv20_p90') and td['rv20']>td['rv20_p90']) else 1.0
+    live['monitor']={'state':stt['machine'],'since':stt.get('since'),'accum':bool(stt.get('accum_overlay')),'pos':mpos,'id20':td['id20'],'on20':td['on20'],'ret20':td['ret20'],
+                     'ma20':td['ma20'],'rv20':td['rv20'],'rv20_p90':td.get('rv20_p90'),'vrp':td.get('vrp'),'iv30':(td['rv20']+td['vrp']) if td.get('vrp') is not None else None,
+                     'last_session':M['last_session'],'short_all':stt.get('short_permission',{}).get('all'),'vol_scale':vol_scale}
+    live['blend']={'pos':0.5*mpos+0.5*x5200,'monitor':mpos,'x5200':x5200,'gap5200':s50/s200_-1}
+    mon={'trades':[t_ for t_ in M.get('trades',[]) if t_['date']>='2026-01-01']}
+R='../research/oos_monitor/'
+oos={k:json.load(open(R+f)) for k,f in [('oos','oos_results.json'),('blend','blend_results.json'),('accel','accel_entry.json')] if os.path.exists(R+f)}
 D={
- 'live':live,'est':est,'capex':capex,'credit':{'results':cr['results'],'series':cr['series']},'flows':flows,'scoreHist':rn['score_hist'],
+ 'live':live,'est':est,'capex':capex,'mon':mon,'oos':oos,'credit':{'results':cr['results'],'series':cr['series']},'flows':flows,'scoreHist':rn['score_hist'],
  'd26':bt['dates2026'],'c26':{k:bt['curves2026'][k] for k in keep},'pos26':{k:bt['positions2026'][k] for k in keep},
  'stats':{k:bt['stats'][k] for k in keep},
  'ind':{k:bt['ind'][k] for k in ['soxx','sma50','sma200','ext200','ext_thr','score']},'comp':bt['components_hist'],

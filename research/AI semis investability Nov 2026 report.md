@@ -135,3 +135,41 @@ Treat individual names differently. **Underweight memory** (MU, SK hynix, Samsun
 The two halves of 2026 teach different lessons. The first half shows that price extension, not valuation, flagged the top. Semis looked "reasonable" at 26x forward even as they traded 81% above trend, and the extension signal, not the P/E, got investors out. The second half shows the reverse: at 13.7x on rising estimates, valuation now argues for buying while trend argues for waiting. Investors who trusted only the multiple would have bought too early in July and again in October. Investors who trusted only trend will probably buy 10–20% above the eventual low. Combining the two, with valuation deciding *whether* to own the group and trend deciding *how much*, is the only approach that respects both the strength of the fundamentals and the two-way history of deep semiconductor drawdowns.
 
 The agentic regime changes *which* chips to own more than *whether* to own chips. In a world where demand outruns sold-out supply, gains accrue to the bottleneck holders with pricing power, and TSMC is the cleanest of these. Memory makers capture the same scarcity but face a visible 2028 supply wave and a leveraged retail shareholder base. The question that will decide the next 12 months is not whether AI demand is real but whether the debt financing behind its marginal buyers holds while the Fed is still tightening. Watch CoreWeave spreads and January's capex guides more closely than token counts.
+
+## Addendum (Nov 15, 2026, evening): filed capex, live valuation and the SOXX Regime Monitor
+
+This addendum supersedes the sleeve sizes and pacing rules in the recommendation above. The live page has the current figures.
+
+**Filed capex is accelerating.** SEC XBRL filings show cash capex for Microsoft, Alphabet, Amazon, Meta and Oracle of $230.4B in calendar 2026 Q3, up 118% year over year. Year-over-year growth over the last four quarters ran +71%, +91%, +87% and +118%. Microsoft's figure excludes finance leases.
+
+**Valuation on primary data (Finnhub).** The 18 largest US-listed chipmakers trade at 15.3x forward earnings, cap-weighted, with a median of 21.7x. Selected names:
+
+| Company | Forward P/E |
+|---|---|
+| Micron | 4.9x |
+| NVIDIA | 14.5x |
+| Broadcom | 17.0x |
+| TSMC | 18.9x |
+| AMD | 39.8x |
+
+Analysts rate 78% of the group Buy. Basket forward earnings of $782B are now recorded daily to track revisions.
+
+**SOXX Regime Monitor, tested out of sample.** The monitor's own state machine was run unchanged on SOXX for 2002–2025, using Jan 20–Dec 31 windows; the code is in `research/oos_monitor/`. The harness reproduces the monitor's 2026 trade log exactly.
+
+| Model, 2002–2025 | Return/yr | Sharpe | Max drawdown |
+|---|---|---|---|
+| Monitor + 50/200 cross (combined) | 12.9% | 0.69 | −32% |
+| Monitor | 12.2% | 0.59 | −48% |
+| 50/200 cross | 12.2% | 0.63 | −42% |
+| Buy & hold | 11.2% | 0.49 | −67% |
+| 5-factor regime composite | 5.6% | 0.37 | −47% |
+
+Two entry tests on the same 15 deep-drawdown episodes:
+- **Accelerating on monitor re-entry:** buying all remaining tranches when the monitor re-enters averaged +35.8% over 12 months, vs +28.4% for plain monthly tranches. It was better in 8 of 12 episodes from 2002 on.
+- **Volatility-scaled tranche size:** no effect (16.9% vs 17.0% mean).
+
+**Updated recommendation.** Accumulate on a fixed schedule: four monthly tranches on about Nov 17, Dec 15, Jan 15 and Feb 15. Split the target 35% TSM, 40% SOXX and 25% NVDA. NVDA was raised from 15% because it is now the cheapest leader at about 14.5x. Start NVDA only after the Nov 17 results, and only if guidance holds. Make no single-name adds in AMD (about 40x) or memory, and avoid leveraged ETFs.
+
+Buy each tranche even when the combined signal reads 0%. Buy all remaining tranches the week the SOXX Regime Monitor re-enters. Pause on any fundamental kill switch, or if the monitor grants short permission.
+
+As of Nov 13 the combined signal is 50%: the monitor is in EXIT and the 50/200 cross is still long. A death cross is likely around Dec 8 if prices stay flat.
