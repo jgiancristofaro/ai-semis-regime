@@ -1,0 +1,5 @@
+data/
+site/
+__pycache__/
+analysis/*.json
+analysis/data.js

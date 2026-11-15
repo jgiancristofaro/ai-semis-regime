@@ -1,0 +1,613 @@
+<title>AI Semis After the Peak</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: research-desk note. Narrow reading column, full-bleed chart panels, a sticky rating rail on desktop. */
+:root{
+  --bg:#f6f7f8; --panel:#ffffff; --ink:#111417; --ink-2:#4a5058; --ink-3:#7a818a; --rule:#e2e5e9; --grid:#eceef1;
+  --accent:#1c5cab; --accent-soft:#e6eef9;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6; --s8:#e34948; --neutral:#8b9097;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --band:rgba(42,120,214,.10);
+  --f-display:"Instrument Sans","Inter",system-ui,sans-serif; --f-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121417; --panel:#1a1d21; --ink:#eef0f2; --ink-2:#b9bec5; --ink-3:#8a9099; --rule:#2c3036; --grid:#262a2f;
+  --accent:#6da7ec; --accent-soft:#1d2a3b;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0ca30c; --s7:#9085e9; --s8:#e66767; --neutral:#7d838b;
+  --band:rgba(57,135,229,.16); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121417; --panel:#1a1d21; --ink:#eef0f2; --ink-2:#b9bec5; --ink-3:#8a9099; --rule:#2c3036; --grid:#262a2f;
+  --accent:#6da7ec; --accent-soft:#1d2a3b;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0ca30c; --s7:#9085e9; --s8:#e66767; --neutral:#7d838b;
+  --band:rgba(57,135,229,.16); color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(28px,4.4vw,44px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(21px,2.6vw,27px);font-weight:600}
+h3{font-size:17px;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--accent)}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.muted{color:var(--ink-2)} .small{font-size:13px} .tiny{font-size:12px;color:var(--ink-3)}
+.stack{display:flex;flex-direction:column;gap:14px}
+/* header */
+.masthead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:22px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:32px;align-items:start}
+.hero .lede{font-size:18px;color:var(--ink-2);max-width:62ch}
+.rating{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.rating .call{font-family:var(--f-display);font-size:26px;font-weight:700;color:var(--accent)}
+.kv{display:grid;grid-template-columns:1fr auto;gap:6px 12px;font-size:13.5px}
+.kv dt{color:var(--ink-2)} .kv dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:12px;padding:2px 8px;border-radius:99px;border:1px solid var(--rule);white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:26px}
+.tile{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;min-width:0}
+.tile .v{font-family:var(--f-mono);font-size:24px;font-weight:500;font-variant-numeric:tabular-nums}
+.tile .l{font-size:12.5px;color:var(--ink-2)}
+/* sections */
+section{margin-top:56px;display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;gap:14px;align-items:baseline;border-top:1px solid var(--rule);padding-top:18px}
+.sec-head .n{font-family:var(--f-mono);font-size:13px;color:var(--accent)}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:16px;min-width:0}
+.chart{position:relative;height:340px;width:100%}
+.chart.sm{height:220px} .chart.md{height:280px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 12.5px var(--f-body);border:1px solid var(--rule);background:transparent;color:var(--ink-2);padding:4px 10px;border-radius:99px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+.chip:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chip i{width:10px;height:3px;border-radius:2px;display:inline-block}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-bottom:10px}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--ink-2);font-size:12.5px}
+td{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+td.txt{font-family:var(--f-body);white-space:normal;text-align:left}
+tr.hl td{background:var(--accent-soft)}
+.pos{color:var(--good)} .neg{color:var(--crit)}
+.callout{border-left:3px solid var(--accent);padding:4px 0 4px 14px;max-width:72ch}
+.verdict{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.verdict .panel{display:flex;flex-direction:column;gap:6px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600}
+.status svg{flex:none}
+select,input[type=range]{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:4px 6px}
+input[type=range]{padding:0;accent-color:var(--accent);width:100%}
+.ctl{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ctl label{font-size:12.5px;color:var(--ink-2);display:flex;justify-content:space-between;gap:8px}
+.bigout{font-family:var(--f-mono);font-size:34px;font-variant-numeric:tabular-nums}
+.strip{display:grid;gap:2px}
+.strip .row{display:grid;grid-template-columns:110px minmax(0,1fr);align-items:center;gap:8px;font-size:12px;color:var(--ink-2)}
+.strip canvas{width:100%;height:14px;display:block;border-radius:2px}
+ul.clean{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+ol.src{font-size:12.5px;color:var(--ink-2);display:flex;flex-direction:column;gap:4px;padding-left:22px;margin:0}
+ol.src a{word-break:break-word}
+.legend-note{font-size:12px;color:var(--ink-3)}
+@media (max-width:900px){.hero{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.verdict{grid-template-columns:repeat(2,minmax(0,1fr))}.cols3{grid-template-columns:1fr}}
+@media (max-width:640px){.cols{grid-template-columns:1fr}.verdict{grid-template-columns:1fr}.chart{height:280px}body{font-size:15px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <span class="eyebrow">Sector note · Semiconductors / AI infrastructure</span>
+    <span class="eyebrow">Priced at the <span data-live="asof" data-fmt="date"></span> close · Data refreshed daily</span>
+  </div>
+
+  <div class="hero">
+    <div class="stack">
+      <h1>AI semis after the peak: the fundamentals say buy, the tape says wait. Do both, in tranches.</h1>
+      <p class="lede">A rules-based regime model would have held SOXX from late December 2025, side-stepped the March oil shock, and exited on <b><span data-live="bo_exit" data-fmt="date"></span></b>, three weeks after the top. It made <span data-live="bo26.total" data-fmt="pct0"></span> vs <span data-live="bh26.total" data-fmt="pct0"></span> buy-and-hold. The same model now scores <b><span data-live="score" data-fmt="int"></span> of 5</b> (see section 03 for what that means). Valuations have roughly halved while earnings estimates kept rising, and agentic demand is real. Our backtests say the right response is to start buying, but slowly.</p>
+      <p class="small muted">This is research, not personal financial advice. Backtests use daily adjusted closes from Yahoo Finance (through <span data-live="asof" data-fmt="date"></span>), a one-day signal lag, 5bp per-side costs and 0% on cash. Single-source or secondary figures are flagged. Prices, signals and backtests refresh from market data each trading day; the research narrative, valuation and source citations are a Nov 15, 2026 snapshot.</p>
+    </div>
+    <aside class="rating" aria-label="Rating summary">
+      <span class="eyebrow">12-month view · AI semis basket</span>
+      <span class="call">Accumulate, staged</span>
+      <span class="small muted">Overweight over 12 months. Tactically neutral until trend repairs.</span>
+      <dl class="kv">
+        <dt>TSM</dt><dd>Buy (core)</dd>
+        <dt>SOXX</dt><dd>Accumulate (4 tranches)</dd>
+        <dt>NVDA</dt><dd>Hold to Nov 17 + CEO</dd>
+        <dt>Memory (MU, SK hynix)</dt><dd>Underweight</dd>
+        <dt>SOXL / 3x ETFs</dt><dd>Avoid</dd>
+      </dl>
+      <div class="chips" aria-label="Signal status">
+        <span class="pill"><i style="background:var(--crit)"></i>Regime <span data-live="score" data-fmt="int"></span>/5</span>
+        <span class="pill"><i style="background:var(--good)"></i>Valuation ~13.7x</span>
+        <span class="pill"><i style="background:var(--good)"></i>Estimates rising</span>
+      </div>
+    </aside>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="l">SOXX close, <span data-live="asof" data-fmt="dateShort"></span></div><div class="v"><span data-live="soxx" data-fmt="usd"></span></div><div class="tiny"><span data-live="dd" data-fmt="pct"></span> from <span data-live="peak_date" data-fmt="dateShort"></span> peak · <span data-live="ytd" data-fmt="pct0"></span> YTD</div></div>
+    <div class="tile"><div class="l">SOX forward P/E</div><div class="v">~13.7x</div><div class="tiny">vs ~19x 10-yr avg, ~26x mid-2026 (secondary)</div></div>
+    <div class="tile"><div class="l">Peak stretch above 200-day</div><div class="v"><span data-live="ext_peak" data-fmt="pct0"></span></div><div class="tiny"><span data-live="ext_peak_date" data-fmt="dateShort"></span> · prior record since 2001: <span data-live="ext_prior_max" data-fmt="pct0"></span> (2003)</div></div>
+    <div class="tile"><div class="l">Regime score now</div><div class="v"><span data-live="score" data-fmt="int"></span> / 5</div><div class="tiny">50/200 death cross ~<span data-live="death_cross_flat" data-fmt="dateShort"></span> if flat</div></div>
+  </div>
+
+  <!-- 1 -->
+  <section id="ride">
+    <div class="sec-head"><span class="n">01</span><h2>2026: a melt-up led by memory, not Nvidia</h2></div>
+    <p>Your read on the year holds, with one correction to the narrative. The rally was not an Nvidia story. NVDA is <b>−12.5% YTD</b>, while Micron is +173%, AMD +149% and SK hynix +87% (after being +300% at the June peak). The SOX index posted <b>+87.8% in Q2</b>, its best quarter since 1994 <a href="#s1">[1]</a>. It was a memory-and-everything-agentic squeeze. Memory prices, CPU demand for agents and HBM shortages did the lifting <a href="#s2">[2]</a>.</p>
+    <div class="panel">
+      <div class="toolbar">
+        <div class="chips" id="tickChips" role="group" aria-label="Show tickers"></div>
+        <button class="chip" id="evtBtn" aria-pressed="true">Event markers</button>
+      </div>
+      <div class="chart"><canvas id="cRide" aria-label="Indexed 2026 price paths, Dec 31 2025 = 100"></canvas></div>
+      <p class="tiny">Indexed to 100 on Dec 31, 2025. Dashed lines mark events. Hover for values. Data: Yahoo Finance adjusted closes.</p>
+    </div>
+    <div class="tbl-wrap panel">
+      <table>
+        <thead><tr><th>Driver you named</th><th>Verified?</th><th style="text-align:left">What the record shows</th></tr></thead>
+        <tbody>
+          <tr><td>Iran war / oil</td><td>Yes</td><td class="txt">War began Feb 28; Brent peaked ~$118–126 in late April. Oil had round-tripped to ~$73 by the June peak, so it hurt the March dip more than the July top <a href="#s3">[3]</a>.</td></tr>
+          <tr><td>Inflation</td><td>Yes</td><td class="txt">CPI 2.4% (Feb) → ~4.2% (May). The Fed hiked to 3.75–4.00% on Sep 16, its first hike since 2023, and a December hike is priced. The 10-yr hit 5.31% on Oct 5 <a href="#s3">[3]</a>.</td></tr>
+          <tr><td>Situational Awareness blow-up</td><td>Yes</td><td class="txt">−67% in July per an investor letter reported by Reuters. It was ~4x levered, long AI infra and short software, and its public book went to Citadel on Jul 30. It accelerated a decline that was already under way <a href="#s4">[4]</a>.</td></tr>
+          <tr><td>Korean leverage</td><td>Yes</td><td class="txt">Single-stock 2x ETFs launched May 27, and margin loans hit a record ~₩38T in June. KODEX SK Hynix 2x fell −89.6% from Jun 22 to Nov 10. KOSPI and SOX peaked on the <i>same day</i> <a href="#s3">[3]</a><a href="#s5">[5]</a>.</td></tr>
+          <tr><td>Missed: AI credit stress</td><td>New</td><td class="txt">CoreWeave CDS ~1,100–1,300bp and bonds >16%; Oracle CDS at a record. The IMF (Oct GFSR) named an AI correction a top-3 stability risk <a href="#s5">[5]</a>.</td></tr>
+          <tr><td>Missed: Nvidia CEO exit</td><td>New</td><td class="txt">Jensen Huang resigned on Nov 12 (SEC 8-K). CFO Colette Kress is interim CEO <a href="#s6">[6]</a>. NVDA's average sell-side target was cut ~37% <a href="#s7">[7]</a>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section id="backtest">
+    <div class="sec-head"><span class="n">02</span><h2>The backtest: buy in January, get out in July</h2></div>
+    <p>We tested five pre-specified rules on SOXX using textbook parameters, none tuned on 2026. The one that fits your narrative is the <b>Regime Composite + Blow-off Exit</b>. Its regime score has five parts: price above the 200-day, 3-month momentum, strength versus the S&amp;P, calm volatility, and the 10-year not up more than 50bp in three months. On top of that sits one overextension rule: if SOXX has been stretched beyond the 95th percentile of its own history above the 200-day and then closes below its 50-day, exit. Re-enter only when all five regime signals agree. Section 03 explains each signal and what it takes to flip it.</p>
+    <div class="panel">
+      <div class="toolbar"><div class="chips" id="stratChips" role="group" aria-label="Show strategies"></div>
+        <label class="small muted" for="bandSel">Shade when long:</label>
+        <select id="bandSel"></select></div>
+      <div class="chart"><canvas id="cBT" aria-label="Strategy equity curves since Oct 2025"></canvas></div>
+      <p class="tiny">Growth of $1 from Oct 1, 2025. The shading shows when the selected strategy held SOXX.</p>
+    </div>
+    <div class="cols">
+      <div class="panel stack">
+        <h3>Signal log: Composite + Blow-off</h3>
+        <ul class="clean small">
+          <li><span class="mono">Dec 22, 2025</span>: long (regime 4–5/5)</li>
+          <li><span class="mono">Mar 6, 2026</span>: exit. The oil shock knocked SOXX below its 50-day after an extreme stretch. Two brief re-entries (Mar 12, Mar 26) were each stopped out the next day.</li>
+          <li><span class="mono">Apr 7, 2026</span>: re-enter, all five signals green (the ceasefire came Apr 8)</li>
+          <li><span class="mono">Jun 22, 2026</span>: SOXX price peak, $218.2, and stretch peak at <b>+81%</b> above the 200-day, an all-time high</li>
+          <li><span class="mono">Jul 14, 2026</span>: <b>exit</b>, close below the 50-day after the blow-off. Samsung missed on Jul 7, and SK hynix fell 15% on Jul 13 as Korean margin calls hit.</li>
+          <li><span class="mono"><span data-live="asof" data-fmt="dateShort"></span></span>: still out. The score is <span data-live="score" data-fmt="int"></span>/5, and re-entry needs 5/5 plus a close above the 50-day.</li>
+        </ul>
+      </div>
+      <div class="panel stack">
+        <div class="toolbar" style="margin:0"><h3 style="margin-right:auto">Results by period</h3><select id="perSel" aria-label="Backtest period"></select></div>
+        <div class="tbl-wrap"><table id="statTbl"></table></div>
+      </div>
+    </div>
+    <div class="callout"><p><b>Caveat.</b> From 2002 to 2025 no timing rule beat buy-and-hold on total return. Their value was cutting drawdowns: the 50/200 cross took max drawdown from −67% to −34% and had the best Sharpe. The blow-off exit is a tail-event tool. It paid off in 2026 because the stretch was nearly twice anything seen since 2001, and in ordinary years it costs you.</p></div>
+
+    <div class="panel stack">
+      <h3>Robustness: was July 14 a lucky parameter?</h3>
+      <p class="small muted">Change the rule's inputs. <span data-live="grid_beat"></span> of 27 combinations beat 2026 buy-and-hold (<span data-live="bh26.total" data-fmt="pct"></span>), returning <span data-live="grid_min" data-fmt="pct0"></span> to <span data-live="grid_max" data-fmt="pct0"></span>. Only the exit moving average changes the sell date: 20-day → Jun 8, 50-day → Jul 14, 100-day → Jul 30.</p>
+      <div class="cols3">
+        <div class="ctl"><label for="gBase">Base strategy</label><select id="gBase"><option value="hold">Buy &amp; hold</option><option value="trend">Trend 200d</option><option value="composite" selected>Regime composite</option></select></div>
+        <div class="ctl"><label for="gPct">Stretch threshold (percentile)</label><select id="gPct"><option value="0.9">90th</option><option value="0.95" selected>95th</option><option value="0.975">97.5th</option></select></div>
+        <div class="ctl"><label for="gMa">Exit trigger: close below</label><select id="gMa"><option value="20">20-day</option><option value="50" selected>50-day</option><option value="100">100-day</option></select></div>
+      </div>
+      <div class="tiles" id="gOut" style="margin-top:4px"></div>
+    </div>
+
+    <div class="panel">
+      <h3>How stretched was 2026?</h3>
+      <div class="chart md"><canvas id="cExt" aria-label="SOXX percent above 200-day average vs expanding 95th percentile"></canvas></div>
+      <p class="tiny">SOXX % above its 200-day average vs. the expanding 95th-percentile threshold, computed from past data only.</p>
+    </div>
+  </section>
+
+  <!-- regime model -->
+  <section id="regime-model">
+    <div class="sec-head"><span class="n">03</span><h2>The regime model: what the score measures and what flips it</h2></div>
+    <p>At every close the model asks five yes/no questions about SOXX. The score is the number of "yes" answers. The rules are fixed and use standard settings, not values fitted to 2026:</p>
+    <div class="cols">
+      <div class="panel stack">
+        <h3>How the score sets the position</h3>
+        <div class="tbl-wrap"><table>
+          <tr><th>Score</th><th style="text-align:left">Regime composite</th><th style="text-align:left">With blow-off exit</th></tr>
+          <tr><td>5 / 5</td><td class="txt">Fully long</td><td class="txt">Fully long. After a blow-off exit, re-entry needs 5/5 <i>and</i> a close above the 50-day.</td></tr>
+          <tr><td>4 / 5</td><td class="txt">Fully long</td><td class="txt">Fully long, unless a blow-off exit is active</td></tr>
+          <tr><td>3 / 5</td><td class="txt">Half position</td><td class="txt">Half, unless a blow-off exit is active</td></tr>
+          <tr><td>0–2 / 5</td><td class="txt">Flat (cash)</td><td class="txt">Flat</td></tr>
+        </table></div>
+        <p class="tiny">Signals are read at the close and acted on at the next close. The blow-off exit fires when SOXX has been stretched above the 95th percentile of its own history versus the 200-day within the last 30 days, then closes below the 50-day.</p>
+      </div>
+      <div class="panel stack">
+        <h3>Where the score has been</h3>
+        <div class="chart sm"><canvas id="cScore" aria-label="Regime score over the last year"></canvas></div>
+        <p class="tiny">Daily score, last 12 months.</p>
+      </div>
+    </div>
+    <div class="panel tbl-wrap">
+      <table id="regTbl"></table>
+      <p class="tiny" style="margin-top:8px">"Flips at next close" is solved exactly for the next session with the S&amp;P 500 and the 10-year held at today's levels. Moving averages include that day's close.</p>
+    </div>
+    <div class="callout" id="regPath"></div>
+    <div class="panel stack">
+      <h3>What-if: pick a date and a SOXX price</h3>
+      <p class="small muted">The windows roll forward every day, so the bar moves even if prices don't. This tool projects each flip level with SOXX, the S&amp;P 500 and the 10-year held flat. It assumes ordinary ±2% days for volatility.</p>
+      <div class="cols3">
+        <div class="ctl"><label for="wiDay">Evaluate at the close of <span class="mono" id="wiDayV"></span></label><input type="range" id="wiDay" min="0" max="59" step="1" value="0"></div>
+        <div class="ctl"><label for="wiPx">SOXX close <span class="mono" id="wiPxV"></span></label><input type="range" id="wiPx" min="110" max="230" step="0.5"></div>
+        <div class="ctl"><label for="wiY">US 10-year yield <span class="mono" id="wiYV"></span></label><input type="range" id="wiY" min="4.40" max="5.90" step="0.01"></div>
+      </div>
+      <div class="tiles" id="wiOut" style="margin-top:0"></div>
+      <div class="chart md"><canvas id="cFlip" aria-label="Projected flip levels for each price-based signal"></canvas></div>
+      <p class="tiny">Price SOXX must close above, on each future date, to pass each check. The dashed line is the price you picked. Volatility and rates don't depend on the SOXX price, so they're scored in the tiles above.</p>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section id="momentum">
+    <div class="sec-head"><span class="n">04</span><h2>Momentum: still in the slow signal, out of the fast one</h2></div>
+    <p>SOXX is in a classic momentum <b>turning point</b>. Its 12-1 month return is still <b><span data-live="mom12_1" data-fmt="pct0"></span></b>, so standard momentum screens still hold it, but the 3-month return is <b><span data-live="mom3" data-fmt="pct0"></span></b>. Goulding, Harvey &amp; Mazzoleni call this mix (slow positive, fast negative) a "Correction" state <a href="#s8">[8]</a>. On SOX since 2001 it has the weakest forward returns of the four states, though they are still positive. Every price-based trend signal is negative, and only <span data-live="breadth_n" data-fmt="int"></span> of 8 large AI semis (<span data-live="breadth_names" data-fmt="list"></span>) are above their 200-day averages.</p>
+    <div class="panel">
+      <div class="chart md"><canvas id="cTrend" aria-label="SOXX with 50 and 200 day averages"></canvas></div>
+      <div class="strip" id="compStrip" style="margin-top:10px"></div>
+      <p class="tiny">Regime components since Oct 2025. A filled cell means risk-on. The bottom row is the total score.</p>
+    </div>
+    <div class="cols">
+      <div class="panel"><h3>Forward SOX returns by momentum state, 2001–2025</h3>
+        <div class="tbl-wrap"><table id="stateTbl"></table></div>
+        <p class="tiny">Monthly. Slow = 12-month return, fast = 1-month. Current state: <b><span data-live="state"></span></b> (Oct 2026 was also "Correction").</p></div>
+      <div class="panel"><h3>Breadth: AI semis above their 50- and 200-day averages</h3>
+        <div class="chart sm"><canvas id="cBreadth"></canvas></div>
+        <p class="tiny">NVDA, TSM, AVGO, AMD, MU, ASML, SK hynix, Samsung.</p></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section id="macro">
+    <div class="sec-head"><span class="n">05</span><h2>What changed in the second half</h2></div>
+    <p>Daily correlations show the market regime flipping. In H1, rising yields and oil hurt semis. In H2, semis' beta to the S&amp;P rose to <b>~3x</b>, and their correlation with Korea's KOSPI more than tripled, from 0.13 to 0.44. In H2 semis traded as a leveraged, crowded position being unwound. BofA's fund manager survey named long semis the most crowded trade for four straight months (53% in September) <a href="#s9">[9]</a>.</p>
+    <div class="cols">
+      <div class="panel"><h3>US 10-year yield (%)</h3><div class="chart sm"><canvas id="cTnx"></canvas></div></div>
+      <div class="panel"><h3>WTI crude ($/bbl)</h3><div class="chart sm"><canvas id="cOil"></canvas></div></div>
+    </div>
+    <div class="panel tbl-wrap"><table id="sensTbl"></table></div>
+  </section>
+
+  <!-- 5 -->
+  <section id="regime">
+    <div class="sec-head"><span class="n">06</span><h2>Is there another "Claude Code moment" coming?</h2></div>
+    <p>The demand evidence is stronger than the price action suggests. Agents use far more compute per task than chat: about 4x for a single agent and ~15x for a multi-agent system, per Anthropic's own engineering figures <a href="#s10">[10]</a>. Usage grew ~5–7x in a year while token prices roughly halved.</p>
+    <div class="tiles">
+      <div class="tile"><div class="l">Anthropic run-rate revenue</div><div class="v">$9B → $65B</div><div class="tiny">end-2025 → Jul 2026 (CNBC) <a href="#s11">[11]</a></div></div>
+      <div class="tile"><div class="l">Google tokens / month</div><div class="v">3.2 quadr.</div><div class="tiny">~7x y/y, I/O May 2026 <a href="#s12">[12]</a></div></div>
+      <div class="tile"><div class="l">AI-assisted R&amp;D speed-up</div><div class="v">~2x</div><div class="tiny">METR assessment of one lab, Nov 5 <a href="#s13">[13]</a></div></div>
+      <div class="tile"><div class="l">HBM supply</div><div class="v">Sold out</div><div class="tiny">SK hynix through 2029; Samsung &amp; Micron 2027 <a href="#s14">[14]</a></div></div>
+    </div>
+    <div class="cols">
+      <div class="panel stack"><h3>Agent swarms beyond engineering: early, real</h3>
+        <ul class="clean small">
+          <li>OpenAI telemetry: weekly enterprise Codex users in <b>Legal grew ~108x</b> Feb→Jun 2026, vs ~5x in Engineering. Legal, Finance and Recruiting made it their primary tool around April. This is vendor data from a low base <a href="#s15">[15]</a>.</li>
+          <li>Anthropic's Cowork ("Claude Code for the rest of your work") went GA on Apr 9, 2026.</li>
+          <li>Only ~18% of large firms (KPMG) run multi-agent systems at scale, so most of the non-technical wave is still ahead.</li>
+        </ul>
+        <p class="small"><b>Our read:</b> this is already happening, and it is the bigger demand lever of the two because it multiplies seats × tasks × agents.</p></div>
+      <div class="panel stack"><h3>Recursive self-improvement: credible, but early</h3>
+        <ul class="clean small">
+          <li>METR's first external assessment found interview and survey evidence consistent with <b>~2x faster capability progress</b> at Anthropic, mostly from AI assisting researchers <a href="#s13">[13]</a>.</li>
+          <li>METR's task-horizon measure now doubles about every 131 days (89 days since 2024). METR warns that this does not translate linearly into automation <a href="#s16">[16]</a>.</li>
+          <li>Hassabis says all leading labs are focused on RSI. Altman targets an automated AI researcher by March 2028. AI chip-design agents are only partially autonomous so far.</li>
+        </ul>
+        <p class="small"><b>Our read:</b> RSI is a 2027–28 upside option. It can also cut either way, because efficiency gains lower compute per task.</p></div>
+    </div>
+    <div class="callout"><p><b>Why this matters for the stocks.</b> Supply is booked out: HBM through 2027+, CoWoS through mid-2027, and TrendForce sees 2027 HBM prices +121% <a href="#s5">[5]</a>. Extra demand in 2027 therefore shows up first as pricing power at the chokepoints (TSMC, memory) and as volume only in 2028. Street capex for 2027 (~$935B for the big four, +28%; over $1T including Oracle) looks low next to 5–7x token growth <a href="#s14">[14]</a>.</p></div>
+  </section>
+
+  <!-- 6 -->
+  <section id="valuation">
+    <div class="sec-head"><span class="n">07</span><h2>Valuation: the sell-off was in the multiple, not the earnings</h2></div>
+    <p>From the June peak, the SOX forward multiple roughly halved, from about 26x to about <b>13.7x</b>. That is a 22% discount to the S&amp;P 500 at 17.7x and close to the ~12x trough level of past cycles <a href="#s7">[7]</a>. Over the same period forward earnings estimates <i>rose</i>: SOX forward EPS is up about 113% YTD (Bernstein, via secondary) and up 70%+ from January to July (Natixis). Every major semi that reported since June raised its outlook <a href="#s7">[7]</a>.</p>
+    <div class="cols">
+      <div class="panel"><h3>Forward P/E, as reported</h3><div class="chart md"><canvas id="cPE"></canvas></div>
+        <p class="tiny">Index multiples come from secondary reports of BofA and Goldman research; single names from Nov press coverage on mixed fiscal bases. Treat them as approximate.</p></div>
+      <div class="panel stack"><h3>Latest prints (Oct–Nov 2026)</h3>
+        <div class="tbl-wrap"><table>
+          <tr><th>Company</th><th>Metric</th><th>Value</th></tr>
+          <tr><td>TSMC</td><td>Q3 revenue y/y</td><td class="pos">+41%</td></tr>
+          <tr><td>TSMC</td><td>Oct revenue y/y</td><td class="pos">+59.7%</td></tr>
+          <tr><td>TSMC</td><td>Q3 gross margin</td><td>66.4%</td></tr>
+          <tr><td>Micron</td><td>Gross margin (Sep qtr)</td><td>87%</td></tr>
+          <tr><td>AMD</td><td>Data center y/y</td><td class="pos">+97%</td></tr>
+          <tr><td>Broadcom</td><td>AI revenue y/y</td><td class="pos">+221%</td></tr>
+          <tr><td>ASML</td><td>FY26 guide</td><td>€44–45B</td></tr>
+        </table></div>
+        <p class="tiny">Sources: company releases as reported <a href="#s7">[7]</a>.</p></div>
+    </div>
+    <div class="callout"><p><b>The catch.</b> Micron trades at ~4x forward and memory at ~4x two-year-out earnings, which means the market is pricing about a 50% earnings fall (Goldman, as reported) <a href="#s7">[7]</a>. A cheap multiple on peak-cycle earnings is not cheap. Designers and foundry need only ~10% earnings declines to reach normal valuations. That is why we prefer TSM and the diversified ETF over memory.</p></div>
+
+    <div class="panel stack">
+      <h3>12-month scenario calculator: SOXX</h3>
+      <p class="small muted">Implied price = $149.30 × (1 + forward-EPS growth) × (exit P/E ÷ 13.7). Pick a preset or move the sliders. The probabilities are our judgment.</p>
+      <div class="chips" id="scnChips" role="group" aria-label="Scenario presets"></div>
+      <div class="cols3">
+        <div class="ctl"><label for="scG">Forward EPS change <span class="mono" id="scGv"></span></label><input type="range" id="scG" min="-40" max="60" step="1"></div>
+        <div class="ctl"><label for="scM">Exit forward P/E <span class="mono" id="scMv"></span></label><input type="range" id="scM" min="9" max="26" step="0.5"></div>
+        <div class="ctl"><span class="small muted">Implied 12-month SOXX</span><span class="bigout" id="scOut"></span><span class="small mono" id="scRet"></span></div>
+      </div>
+      <div class="tbl-wrap"><table id="scnTbl"></table></div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section id="entry">
+    <div class="sec-head"><span class="n">08</span><h2>How to buy a broken leader: the entry backtest</h2></div>
+    <p>We found 15 prior episodes since 2000 when the SOX was at least 28% below its 52-week high and below its 200-day average, as it is now. For each one we compared four entry plans over the next 12 months. Waiting for the trend to repair (a reclaim of the 200-day) gave up about half of the rebound and did not avoid the 2001 and 2008 losses, because the reclaims were false. <b>Buying in four monthly tranches had the best risk/reward:</b> the highest median return and less than half the median drawdown of buying everything at once.</p>
+    <div class="panel">
+      <div class="toolbar"><div class="chips" id="planChips" role="group" aria-label="Entry plans"></div></div>
+      <div class="chart"><canvas id="cEntry" aria-label="12-month returns by entry plan across 15 episodes"></canvas></div>
+    </div>
+    <div class="panel tbl-wrap"><table id="planTbl"></table></div>
+    <div class="callout"><p><b>What separated good from bad episodes:</b> the losers (2001, 2002, 2008) came with collapsing earnings. The winners (2009, 2020, Oct 2022, Apr 2025) came while estimates held. Today estimates are rising, and 12-month momentum is still +44%, a combination with almost no precedent. That is why the kill criteria below are tied to estimates and capex, not price.</p></div>
+  </section>
+
+  <!-- 8 -->
+  <section id="risks">
+    <div class="sec-head"><span class="n">09</span><h2>Risks, kill criteria and the calendar</h2></div>
+    <div class="verdict">
+      <div class="panel"><span class="status"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--crit)"/></svg>Financing</span><p class="small">AI credit is the weak link. The IMF counts 14 circular deals (~$300B equity, ~$650B debt) against $1.4T of revenue commitments, and ~$600B of AI debt was issued in 2026 <a href="#s5">[5]</a>.</p></div>
+      <div class="panel"><span class="status"><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="var(--serious)"/></svg>Rates</span><p class="small">10-year at 5.15%, the Fed hiking, CPI ~4%. In H2 a 100bp yield rise mapped to a meaningfully larger semis drawdown than in 2025.</p></div>
+      <div class="panel"><span class="status"><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="var(--serious)"/></svg>Positioning</span><p class="small">Retail is still buying the dip: SOXL took ~$7B in one October week. Capitulation looks incomplete, which supports BofA's call for a Q1-2027 trough <a href="#s9">[9]</a>.</p></div>
+      <div class="panel"><span class="status"><svg width="12" height="12"><polygon points="6,1 11,11 1,11" fill="var(--warn)"/></svg>Memory cycle</span><p class="small">New fabs ramp in 2H27. Memory is 68% of major cloud providers' 2027 capex (TrendForce), which squeezes budgets for compute <a href="#s5">[5]</a>.</p></div>
+    </div>
+    <div class="cols">
+      <div class="panel stack"><h3>Kill criteria: stop adding if any trips</h3>
+        <ul class="clean small">
+          <li>A top-5 hyperscaler <b>cuts</b> 2027 capex guidance (Q4 calls, late Jan–early Feb).</li>
+          <li>TSMC monthly revenue growth falls below <b>+20% y/y</b> (vs +59.7% in October).</li>
+          <li>Consensus SOX forward EPS revised down <b>more than 10%</b> in a quarter. That is the 2001/2008 signature.</li>
+          <li>An AI-infrastructure credit event, such as a CoreWeave-type default or a failed data-center financing.</li>
+          <li>10-year above <b>5.5%</b>, or the Fed signalling multiple further hikes.</li>
+        </ul></div>
+      <div class="panel stack"><h3>Catalyst calendar</h3>
+        <div class="tbl-wrap"><table>
+          <tr><th>Date</th><th style="text-align:left">Event</th></tr>
+          <tr><td>Nov 17</td><td class="txt">NVDA FQ3 FY27 results. Consensus ~$109B revenue; options imply ~±9%.</td></tr>
+          <tr><td>~Nov 18</td><td class="txt">BofA November fund manager survey: is semis still the most crowded trade?</td></tr>
+          <tr><td>~Dec 4</td><td class="txt">Earliest date the volatility signal can turn risk-on (the Nov 5–11 swings leave the 20-day window)</td></tr>
+          <tr><td>~<span data-live="death_cross_flat" data-fmt="dateShort"></span></td><td class="txt">SOXX 50/200-day death cross if price stays flat</td></tr>
+          <tr><td>Dec 8–9</td><td class="txt">FOMC. A hike is priced.</td></tr>
+          <tr><td>~Dec 10</td><td class="txt">TSMC November revenue</td></tr>
+          <tr><td>Mid-Jan</td><td class="txt">TSMC Q4 results and 2027 guidance</td></tr>
+          <tr><td>Late Jan–Feb</td><td class="txt">Hyperscaler Q4 calls with 2027 capex dollar guidance</td></tr>
+        </table></div></div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section id="call">
+    <div class="sec-head"><span class="n">10</span><h2>Recommendation</h2></div>
+    <p><b>Yes, AI semis are investable today, but not as a lump sum and not as the momentum trade they were.</b> The early-2026 setup was trend plus momentum. The current one is value plus fundamentals against a broken tape. That calls for a different playbook: buy on a schedule, prefer quality, and use fundamental kill switches instead of price stops.</p>
+    <div class="panel tbl-wrap"><table>
+      <tr><th>Sleeve</th><th>Share of target</th><th style="text-align:left">How</th></tr>
+      <tr><td>TSM</td><td>40%</td><td class="txt">Four equal tranches: week of Nov 17, ~Dec 15, ~Jan 15, ~Feb 15. It is the chokepoint with pricing power: 5–10% price increases reported for 2027, sold-out CoWoS, no governance cloud. It is only −18% from its high.</td></tr>
+      <tr><td>SOXX</td><td>45%</td><td class="txt">Same four-tranche schedule. Accelerate the remaining tranches if the regime score reaches 4/5 (section 03 shows the price that takes; about <span data-live="need.momentum" data-fmt="usd0"></span> at the next close today, falling as the window rolls).</td></tr>
+      <tr><td>NVDA</td><td>15%</td><td class="txt">Wait for Nov 17 results and clarity on the CEO search. The governance discount may be the opportunity, but the event risk is binary.</td></tr>
+      <tr><td>Memory, SOXL</td><td>0% extra</td><td class="txt">Memory exposure comes through SOXX only. The ~4x multiples price a cycle peak. Leveraged ETFs lost ~49% in a month this fall.</td></tr>
+    </table></div>
+    <div class="callout"><p><b>What would make us more aggressive:</b> an NVDA beat-and-raise that holds, a BofA survey showing semis no longer crowded, a December Fed pause, and a regime score of 4/5 or better. Under the rules that worked in 2026, those together are the "all clear".</p></div>
+  </section>
+
+  <section id="sources">
+    <div class="sec-head"><span class="n">—</span><h2>Sources</h2></div>
+    <p class="small muted">Research used search-engine summaries of the linked pages because several publishers were not reachable from our environment. Items marked "secondary" come from aggregator reports of bank research.</p>
+    <ol class="src">
+      <li id="s1"><a href="https://www.axios.com" rel="noopener">Axios</a>, Jul 1, 2026: SOX's +87.8% Q2, best quarter since 1994 (via timeline research notes).</li>
+      <li id="s2"><a href="https://www.cnbc.com/2026/04/23/sk-hynix-earnings-ai-memory-shortage-hbm-demand.html" rel="noopener">CNBC, SK hynix record Q1 on AI memory shortage</a> (Apr 23, 2026); CNBC Jun 1 coverage of the AMD rally and agentic CPU demand.</li>
+      <li id="s3">Timeline and macro notes: Fed decisions, CPI path, Brent, Korean leveraged ETFs (Reuters, CNBC, Korean press via search summaries). <a href="https://finance.yahoo.com/markets/article/the-bond-market-just-turned-on-the-ai-trade--and-chip-stocks-lost-more" rel="noopener">Yahoo Finance: "The bond market just turned on the AI trade"</a> (~Nov 14).</li>
+      <li id="s4"><a href="https://www.implicator.ai/situational-awareness-fell-67-in-july-and-removed-all-leverage-letter-shows/" rel="noopener">Implicator, citing Reuters: Situational Awareness −67% in July</a>; <a href="https://qz.com/situational-awareness-hedge-fund-margin-call-citadel-fire-sale-073126" rel="noopener">Quartz: margin call and Citadel sale</a>.</li>
+      <li id="s5"><a href="https://qz.com/imf-ai-stock-crash-global-financial-stability-101326" rel="noopener">Quartz on IMF GFSR (Oct 13, 2026)</a>; <a href="https://www.dramexchange.com/WeeklyResearch/Post/2/12851.html" rel="noopener">TrendForce/DRAMeXchange: 2027 HBM ASP +121%</a>; <a href="https://www.trendforce.com/presscenter/news/20260825-13198.html" rel="noopener">TrendForce: memory 68% of CSP 2027 capex</a>; <a href="https://finance.yahoo.com/technology/ai/articles/howard-marks-calls-ai-exposure-170335336.html" rel="noopener">Howard Marks memo, Nov 11 (Yahoo Finance)</a>; CNBC Nov 6 on AI credit default swaps.</li>
+      <li id="s6"><a href="https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000082/nvidiaannouncesceotransiti.htm" rel="noopener">NVIDIA Form 8-K: CEO transition</a> (Nov 12, 2026); <a href="https://www.cnbc.com/2026/11/12/nvidia-jensen-huang-ceo-live-updates.html" rel="noopener">CNBC live updates</a>; <a href="https://www.cnbc.com/2026/11/09/nvidia-jensen-huang-chinese-spy-investigation.html" rel="noopener">CNBC Nov 9: board investigation</a>.</li>
+      <li id="s7"><a href="https://econotimes.com/" rel="noopener">Econotimes: "Chip Valuations Hit Multiyear Lows as Goldman Flags a Possible 2027 Peak"</a> (secondary; SOX 13.7x vs S&amp;P 17.7x, trough ~12x); <a href="https://www.tokenpost.com/news/investing/52637" rel="noopener">TokenPost on BofA semis drawdown call</a> (secondary); <a href="https://finviz.com/news/418813/" rel="noopener">Finviz, Nov 9: NVDA analyst moves</a>; company results via Reuters/CNBC summaries (TSMC Oct 15, AMD Nov 3, Micron, ASML, Broadcom Sep 2).</li>
+      <li id="s8">Goulding, Harvey &amp; Mazzoleni, "Momentum Turning Points", <i>Journal of Financial Economics</i> (2023). The state definitions are applied here to SOX monthly data.</li>
+      <li id="s9">BofA Global Fund Manager Survey, Sep 2026 (53% "long semis" most crowded), via <a href="https://cryptobriefing.com/bofa-survey-fund-managers-overweight-tech/" rel="noopener">CryptoBriefing</a> and KuCoin (secondary); SOXL flow data via press reports.</li>
+      <li id="s10">Anthropic Engineering, "How we built our multi-agent research system" (2025): ~4x tokens for agents and ~15x for multi-agent vs chat.</li>
+      <li id="s11"><a href="https://www.cnbc.com/2026/08/17/" rel="noopener">CNBC, Aug 17, 2026: Anthropic run-rate ~$65B</a>.</li>
+      <li id="s12">Google I/O, May 2026 (Pichai): ~3.2 quadrillion tokens/month, via GIGAZINE summary.</li>
+      <li id="s13"><a href="https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/" rel="noopener">METR: Anthropic AI R&amp;D acceleration assessment</a> (Nov 5, 2026).</li>
+      <li id="s14">SK hynix, Samsung and Micron investor commentary on HBM allocation; hyperscaler 2027 capex consensus (CNBC, Moody's ~$1T 2027). See compute-demand notes.</li>
+      <li id="s15">OpenAI enterprise usage report (2026): Codex adoption by function.</li>
+      <li id="s16"><a href="https://metr.org/blog/2026-01-29-time-horizon-1-1/" rel="noopener">METR Time Horizon 1.1</a>; <a href="https://metr.org/notes/2026-01-22-time-horizon-limitations/" rel="noopener">METR limitations note</a>.</li>
+      <li id="s17">Price data: Yahoo Finance daily adjusted closes for SOXX, SOX, TSM, NVDA, AVGO, AMD, MU, ASML, SK hynix, Samsung, KOSPI, SPY, ^TNX and WTI. All backtests are the author's own calculations.</li>
+    </ol>
+  </section>
+  <footer class="tiny" style="margin-top:40px;border-top:1px solid var(--rule);padding-top:14px;display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:space-between">
+    <span>Last built <span data-live="built"></span> from market data through <span data-live="asof" data-fmt="date"></span>.</span>
+    <span>Code and research notes: <a href="https://github.com/jgiancristofaro/ai-semis-regime" rel="noopener">github.com/jgiancristofaro/ai-semis-regime</a></span>
+    <span>Research, not investment advice.</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<script>
+/*__DATA__*/
+(function(){
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const pct=(v,d=1)=>(v>0?'+':'')+(v*100).toFixed(d)+'%';
+const fmtD=s=>{const [y,m,d]=s.split('-');return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+(+d)+(m==='01'&&+d<8?" '"+y.slice(2):'')};
+const charts={};
+function base(){return{
+  responsive:true,maintainAspectRatio:false,animation:false,
+  interaction:{mode:'index',intersect:false},
+  plugins:{legend:{display:false},tooltip:{backgroundColor:css('--panel'),titleColor:css('--ink'),bodyColor:css('--ink-2'),borderColor:css('--rule'),borderWidth:1,padding:10,
+    titleFont:{family:'JetBrains Mono'},bodyFont:{family:'JetBrains Mono',size:12},boxWidth:10,boxHeight:3}},
+  scales:{x:{grid:{display:false},border:{color:css('--rule')},ticks:{color:css('--ink-3'),font:{family:'JetBrains Mono',size:11},maxRotation:0,autoSkipPadding:24}},
+          y:{grid:{color:css('--grid')},border:{display:false},ticks:{color:css('--ink-3'),font:{family:'JetBrains Mono',size:11}}}}}}
+function mk(id,cfg){if(charts[id])charts[id].destroy();charts[id]=new Chart(document.getElementById(id),cfg);return charts[id]}
+// plugin: vertical event lines + optional shaded bands
+const evPlug={id:'ev',afterDatasetsDraw(c,_,o){if(!o||!o.on)return;const {ctx,chartArea:a,scales:{x}}=c;ctx.save();
+  (o.items||[]).forEach((e,k)=>{const i=c.data.labels.indexOf(e[0]);if(i<0)return;const px=x.getPixelForValue(i);
+   ctx.strokeStyle=css('--ink-3');ctx.setLineDash([3,3]);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(px,a.top+14);ctx.lineTo(px,a.bottom);ctx.stroke();
+   ctx.setLineDash([]);ctx.fillStyle=css('--ink-2');ctx.font='11px Inter, sans-serif';ctx.textAlign=px>a.right-80?'right':'left';
+   ctx.fillText(e[1],px+(px>a.right-80?-4:4),a.top+10+(k%3)*13)});ctx.restore()},
+  beforeDatasetsDraw(c,_,o){if(!o||!o.band)return;const {ctx,chartArea:a,scales:{x}}=c;ctx.save();ctx.fillStyle=css('--band');
+   const b=o.band;let st=null;for(let i=0;i<=b.length;i++){const on=i<b.length&&b[i]>0;if(on&&st===null)st=i;if(!on&&st!==null){const x0=x.getPixelForValue(st),x1=x.getPixelForValue(i-1);ctx.fillRect(x0,a.top,Math.max(1,x1-x0),a.bottom-a.top);st=null}}ctx.restore()}};
+Chart.register(evPlug);
+const line=(label,data,color,extra={})=>Object.assign({label,data,borderColor:color,backgroundColor:color,borderWidth:2,pointRadius:0,pointHoverRadius:4,tension:0,spanGaps:true},extra);
+
+// ---------- 1. Ride ----------
+const T=[['SOXX','SOXX','--s1'],['TSM','TSM','--s2'],['NVDA','NVDA','--s3'],['MU','Micron','--s4'],['AMD','AMD','--s5'],['000660.KS','SK hynix','--s6'],['AVGO','Broadcom','--s7'],['SPY','S&P 500','--neutral']];
+const tOn=new Set(['SOXX','TSM','NVDA','MU','SPY']);let evOn=true;
+const EV=[['2026-03-02','Iran war'],['2026-04-08','Ceasefire'],['2026-06-22','SOXX peak'],['2026-07-14','Exit signal'],['2026-07-30','SA fund unwind'],['2026-09-16','Fed hike'],['2026-11-05','Nov 5 rout'],['2026-11-12','Huang resigns']];
+function chipSet(el,items,set,cb){el.innerHTML='';items.forEach(([k,lab,col])=>{const b=document.createElement('button');b.className='chip';b.type='button';b.setAttribute('aria-pressed',set.has(k));b.innerHTML=(col?`<i style="background:var(${col})"></i>`:'')+lab;b.onclick=()=>{set.has(k)?set.delete(k):set.add(k);b.setAttribute('aria-pressed',set.has(k));cb()};el.appendChild(b)})}
+function drawRide(){const L=D.norm.dates;mk('cRide',{type:'line',data:{labels:L,datasets:T.filter(t=>tOn.has(t[0])).map(t=>line(t[1],D.norm[t[0]],css(t[2]),t[0]==='SPY'?{borderDash:[5,4]}:{}))},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:evOn,items:EV},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: ${i.raw.toFixed(0)}`}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:(v)=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{type:'logarithmic',ticks:Object.assign(base().scales.y.ticks,{callback:v=>[50,75,100,150,200,300,400].includes(v)?v:''})})})})})}
+chipSet(document.getElementById('tickChips'),T,tOn,drawRide);
+document.getElementById('evtBtn').onclick=e=>{evOn=!evOn;e.currentTarget.setAttribute('aria-pressed',evOn);drawRide()};
+
+// ---------- 2. Backtest ----------
+const S=[['Buy & Hold','Buy & hold','--neutral'],['Trend 200d','Trend 200d','--s2'],['50/200 Cross','50/200 cross','--s3'],['Regime Composite','Regime composite','--s7'],['Composite + Blow-off Exit','Composite + Blow-off','--s1']];
+const sOn=new Set(['Buy & Hold','Trend 200d','Composite + Blow-off Exit']);
+const bandSel=document.getElementById('bandSel');S.forEach(s=>{const o=new Option(s[1],s[0]);bandSel.add(o)});bandSel.value='Composite + Blow-off Exit';
+function drawBT(){const L=D.d26;mk('cBT',{type:'line',data:{labels:L,datasets:S.filter(s=>sOn.has(s[0])).map(s=>line(s[1],D.c26[s[0]],css(s[2]),s[0]==='Buy & Hold'?{borderDash:[5,4]}:{borderWidth:s[0].startsWith('Composite +')?2.5:2}))},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:true,band:D.pos26[bandSel.value],items:[['2026-06-22','Peak'],['2026-07-14','Exit']]},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: $${i.raw.toFixed(2)}`}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{ticks:Object.assign(base().scales.y.ticks,{callback:v=>'$'+v.toFixed(2)})})})})})}
+chipSet(document.getElementById('stratChips'),S,sOn,drawBT);bandSel.onchange=drawBT;
+const perSel=document.getElementById('perSel');Object.keys(D.stats['Buy & Hold']).forEach(p=>perSel.add(new Option(p,p)));
+function drawStats(){const p=perSel.value;let h='<tr><th>Strategy</th><th>Return</th><th>CAGR</th><th>Sharpe</th><th>Max DD</th><th>In mkt</th></tr>';
+ S.forEach(s=>{const x=D.stats[s[0]][p];h+=`<tr${s[0].startsWith('Composite +')?' class="hl"':''}><td class="txt">${s[1]}</td><td class="${x.total>=0?'pos':'neg'}">${pct(x.total,0)}</td><td>${p==='2026 YTD'?'n/a':pct(x.cagr)}</td><td>${x.sharpe.toFixed(2)}</td><td class="neg">${pct(x.maxdd,0)}</td><td>${(x.time_in*100).toFixed(0)}%</td></tr>`});
+ document.getElementById('statTbl').innerHTML=h}
+perSel.onchange=drawStats;
+// grid
+function drawGrid(){const b=gBase.value,p=+gPct.value,m=+gMa.value;const r=D.grid.find(g=>g.base===b&&Math.abs(g.pct-p)<1e-6&&g.ma===m);
+ const last=r.exits26[r.exits26.length-1];
+ document.getElementById('gOut').innerHTML=`<div class="tile"><div class="l">2026 YTD return</div><div class="v ${r.ret26>=0?"pos":"neg"}">${pct(r.ret26,1)}</div><div class="tiny">buy &amp; hold ${pct(D.live.bh26.total,1)}</div></div>
+ <div class="tile"><div class="l">2026 max drawdown</div><div class="v">${pct(r.dd26,1)}</div><div class="tiny">buy &amp; hold ${pct(D.live.bh26.maxdd,1)}</div></div>
+ <div class="tile"><div class="l">Final 2026 exit</div><div class="v">${fmtD('2026-'+last)}</div><div class="tiny">all exits: ${r.exits26.map(e=>fmtD('2026-'+e)).join(', ')}</div></div>
+ <div class="tile"><div class="l">2002–2025 growth of $1</div><div class="v">$${(1+r.retFull).toFixed(1)}</div><div class="tiny">buy &amp; hold $${(1+D.stats["Buy & Hold"]["Full 2002-2025 (out-of-sample)"].total).toFixed(1)} · Sharpe ${r.sharpeFull.toFixed(2)} vs ${D.stats["Buy & Hold"]["Full 2002-2025 (out-of-sample)"].sharpe.toFixed(2)}</div></div>`}
+['gBase','gPct','gMa'].forEach(i=>document.getElementById(i).onchange=drawGrid);
+// extension
+function drawExt(){const L=D.d26;mk('cExt',{type:'line',data:{labels:L,datasets:[line('% above 200-day',D.ind.ext200.map(v=>v==null?null:v*100),css('--s1'),{fill:{target:'origin',above:css('--band'),below:'transparent'}}),line('95th pct threshold',D.ind.ext_thr.map(v=>v==null?null:v*100),css('--s8'),{borderDash:[5,4],borderWidth:1.5})]},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:true,items:[['2026-06-22','+81% record'],['2026-07-14','Exit']]},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: ${i.raw.toFixed(1)}%`}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{ticks:Object.assign(base().scales.y.ticks,{callback:v=>v+'%'})})})})})}
+
+// ---------- 3. Momentum ----------
+function drawTrend(){const L=D.d26;mk('cTrend',{type:'line',data:{labels:L,datasets:[line('SOXX',D.ind.soxx,css('--s1')),line('50-day',D.ind.sma50,css('--s2'),{borderWidth:1.5}),line('200-day',D.ind.sma200,css('--s7'),{borderWidth:1.5,borderDash:[5,4]})]},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{legend:{display:true,position:'top',align:'end',labels:{color:css('--ink-2'),boxWidth:12,boxHeight:3,font:{family:'Inter',size:12}}},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: $${i.raw.toFixed(2)}`}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})})})})})}
+function drawStrip(){const el=document.getElementById('compStrip');el.innerHTML='';const names={trend:'Above 200-day',momentum:'3-mo momentum',rel_strength:'Beats S&P',calm_vol:'Calm volatility',rates_ok:'Rates OK'};
+ const rows=Object.keys(names).map(k=>[names[k],D.comp[k],v=>v?css('--s1'):css('--grid')]);rows.push(['Score (0–5)',D.ind.score,v=>v>=4?css('--good'):v>=3?css('--warn'):css('--crit')]);
+ rows.forEach(([lab,arr,col])=>{const r=document.createElement('div');r.className='row';r.innerHTML=`<span>${lab}</span>`;const c=document.createElement('canvas');r.appendChild(c);el.appendChild(r);
+  requestAnimationFrame(()=>{const w=c.clientWidth||600;c.width=w*2;c.height=28;const g=c.getContext('2d');const n=arr.length,cw=c.width/n;arr.forEach((v,i)=>{g.fillStyle=col(v);g.fillRect(Math.floor(i*cw),0,Math.ceil(cw),28)})})});
+ const ax=document.createElement('div');ax.className='row';ax.innerHTML='<span></span><span class="tiny" style="display:flex;justify-content:space-between"><span>Oct 2025</span><span>Jun 22 peak</span><span>Nov 13, 2026</span></span>';el.appendChild(ax)}
+function drawStates(){let h='<tr><th>State</th><th>n</th><th>+3m avg</th><th>+12m avg</th><th>3m hit</th></tr>';
+ ['Bull','Correction','Bear','Rebound'].forEach(s=>{const x=D.states.find(r=>r.state===s);h+=`<tr${s==='Correction'?' class="hl"':''}><td class="txt">${s}${s==='Correction'?' (now)':''}</td><td>${x.n}</td><td>${pct(x.f3)}</td><td>${pct(x.f12)}</td><td>${(x.hit3*100).toFixed(0)}%</td></tr>`});
+ document.getElementById('stateTbl').innerHTML=h}
+function drawBreadth(){const L=D.breadth.dates;mk('cBreadth',{type:'line',data:{labels:L,datasets:[line('Above 200-day',D.breadth.above200.map(v=>v*100),css('--s1')),line('Above 50-day',D.breadth.above50.map(v=>v*100),css('--s2'),{borderWidth:1.5})]},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{legend:{display:true,position:'top',align:'end',labels:{color:css('--ink-2'),boxWidth:12,boxHeight:3,font:{family:'Inter',size:12}}},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: ${Math.round(i.raw/12.5)} of 8`}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{min:0,max:100,ticks:Object.assign(base().scales.y.ticks,{stepSize:25,callback:v=>v+'%'})})})})})}
+
+// ---------- 4. Macro ----------
+function small(id,key,col,fmt){const L=D.macro.dates;mk(id,{type:'line',data:{labels:L,datasets:[line(key,D.macro[key],css(col))]},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:true,items:[['2026-06-22','Semis peak']]},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>' '+fmt(i.raw)}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})})})})})}
+function drawSens(){const P=['2025','H1 2026','H2 2026'];let h='<tr><th>Daily SOXX vs.</th>'+P.map(p=>`<th>${p}</th>`).join('')+'</tr>';
+ [['corr_dy','Corr. with 10-yr yield change'],['corr_oil','Corr. with oil'],['corr_kospi_prev','Corr. with KOSPI'],['beta_spy','Beta to S&P 500']].forEach(([k,l])=>{h+=`<tr><td class="txt">${l}</td>`+P.map(p=>`<td>${D.sens[p][k].toFixed(2)}</td>`).join('')+'</tr>'});
+ document.getElementById('sensTbl').innerHTML=h}
+
+// ---------- 6. Valuation ----------
+function drawPE(){const lab=['SOX mid-2026','SOX 10-yr avg','S&P 500','NVDA (CY27)','AMD (FY27)','SOX now','SOX trough','Micron'];const val=[26,19,17.7,20.5,19,13.7,12,4];
+ const col=lab.map(l=>l==='SOX now'?css('--s1'):l.startsWith('SOX')?css('--neutral'):css('--s2'));
+ mk('cPE',{type:'bar',data:{labels:lab,datasets:[{data:val,backgroundColor:col,borderRadius:4,barThickness:16}]},options:Object.assign(base(),{indexAxis:'y',interaction:{mode:'nearest',intersect:true},
+  plugins:Object.assign(base().plugins,{tooltip:Object.assign(base().plugins.tooltip,{callbacks:{label:i=>` ~${i.raw}x forward P/E`}})}),
+  scales:{x:Object.assign(base().scales.y,{min:0,ticks:Object.assign(base().scales.y.ticks,{callback:v=>v+'x'})}),y:Object.assign(base().scales.x,{ticks:{color:css('--ink-2'),font:{family:'Inter',size:12}}})}})})}
+const SC=[['bear','Bear: memory bust, 30%',-25,11,.30],['base','Base: estimates grind, 45%',15,15,.45],['bull','Bull: agentic step-up, 25%',35,19,.25]];
+const scG=document.getElementById('scG'),scM=document.getElementById('scM');let scSel=new Set(['base']);
+function calc(g,m){return 149.30*(1+g/100)*(m/13.7)}
+function drawScn(){const g=+scG.value,m=+scM.value,p=calc(g,m);document.getElementById('scGv').textContent=(g>0?'+':'')+g+'%';document.getElementById('scMv').textContent=m.toFixed(1)+'x';
+ document.getElementById('scOut').textContent='$'+p.toFixed(0);const r=p/149.3-1;const e=document.getElementById('scRet');e.textContent=pct(r,0)+' vs $149.30';e.className='small mono '+(r>=0?'pos':'neg');
+ let h='<tr><th>Scenario</th><th>EPS</th><th>Exit P/E</th><th>Price</th><th>Return</th><th>Prob.</th></tr>';let ev=0;
+ SC.forEach(([k,l,gg,mm,pp])=>{const pr=calc(gg,mm),rr=pr/149.3-1;ev+=pp*rr;h+=`<tr><td class="txt">${l.split(',')[0]}</td><td>${gg>0?'+':''}${gg}%</td><td>${mm}x</td><td>$${pr.toFixed(0)}</td><td class="${rr>=0?'pos':'neg'}">${pct(rr,0)}</td><td>${(pp*100).toFixed(0)}%</td></tr>`});
+ h+=`<tr class="hl"><td class="txt"><b>Probability-weighted</b></td><td></td><td></td><td></td><td class="pos">${pct(ev,0)}</td><td>100%</td></tr>`;document.getElementById('scnTbl').innerHTML=h}
+const scc=document.getElementById('scnChips');SC.forEach(([k,l,g,m])=>{const b=document.createElement('button');b.className='chip';b.type='button';b.textContent=l;b.setAttribute('aria-pressed',k==='base');
+ b.onclick=()=>{scG.value=g;scM.value=m;[...scc.children].forEach(x=>x.setAttribute('aria-pressed',x===b));drawScn()};scc.appendChild(b)});
+scG.value=15;scM.value=15;scG.oninput=scM.oninput=()=>{[...scc.children].forEach(x=>x.setAttribute('aria-pressed','false'));drawScn()};
+
+// ---------- 7. Entry ----------
+const PL=[['allin','All-in at signal','--neutral'],['dca4','4 monthly tranches','--s1'],['staged','⅓ now, ⅔ on 200-day','--s3'],['wait200','Wait for 200-day','--s2']];
+const pOn=new Set(['allin','dca4','wait200']);
+function drawEntry(){const L=D.staged.map(r=>r.date.slice(0,7));mk('cEntry',{type:'bar',data:{labels:L,datasets:PL.filter(p=>pOn.has(p[0])).map(p=>({label:p[1],data:D.staged.map(r=>r[p[0]]*100),backgroundColor:css(p[2]),borderRadius:3,borderColor:css('--panel'),borderWidth:1}))},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{legend:{display:true,position:'top',align:'end',labels:{color:css('--ink-2'),boxWidth:12,boxHeight:8,font:{family:'Inter',size:12}}},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>'Signal '+i[0].label,label:i=>` ${i.dataset.label}: ${i.raw>0?'+':''}${i.raw.toFixed(0)}% (12m)`}})}),
+ scales:Object.assign(base().scales,{y:Object.assign(base().scales.y,{ticks:Object.assign(base().scales.y.ticks,{callback:v=>v+'%'})})})})})}
+chipSet(document.getElementById('planChips'),PL,pOn,drawEntry);
+function drawPlanTbl(){const med=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2};const mean=a=>a.reduce((x,y)=>x+y,0)/a.length;
+ const W={allin:'worstAllIn',dca4:'worstDca',staged:'worstStaged',wait200:null};
+ let h='<tr><th>Entry plan (15 episodes)</th><th>Mean 12m</th><th>Median 12m</th><th>% positive</th><th>Median worst DD</th></tr>';
+ PL.forEach(([k,l])=>{const a=D.staged.map(r=>r[k]);const w=W[k]?pct(med(D.staged.map(r=>r[W[k]])),0):'n/a';h+=`<tr${k==='dca4'?' class="hl"':''}><td class="txt">${l}</td><td>${pct(mean(a))}</td><td>${pct(med(a))}</td><td>${Math.round(a.filter(x=>x>0).length/a.length*100)}%</td><td>${w}</td></tr>`});
+ document.getElementById('planTbl').innerHTML=h}
+
+
+// ---------- live bindings ----------
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const get=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
+const F={usd:v=>'$'+v.toFixed(2),usd0:v=>'$'+v.toFixed(0),pct:v=>pct(v,1),pct0:v=>pct(v,0),int:v=>String(Math.round(v)),
+ date:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)+', '+y},dateShort:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)},list:v=>v.join(', ')};
+function bind(){document.querySelectorAll('[data-live]').forEach(el=>{const v=get(D.live,el.dataset.live);if(v==null)return;el.textContent=(F[el.dataset.fmt]||String)(v)})}
+
+// ---------- regime model ----------
+const LV=D.live;
+const REG=[
+ ['trend','Above 200-day','Is the long-term trend up?','Close above its 200-day average',()=>F.usd(LV.soxx)+' vs '+F.usd(LV.sma200),()=>'close > '+F.usd(LV.need.trend)],
+ ['momentum','3-month momentum','Is it higher than 63 trading days ago?','Close above the close of 63 sessions earlier',()=>pct(LV.ret63)+' (vs '+F.usd(LV.anchor63)+' on '+F.dateShort(LV.anchor63_date)+')',()=>'close > '+F.usd(LV.need.momentum)],
+ ['rel_strength','Beats the S&P 500','Is it leading the market?','SOXX/SPY ratio above its 100-day average',()=>LV.ratio.toFixed(4)+' vs '+LV.ratio_ma100.toFixed(4),()=>'close > '+F.usd(LV.need.rel_strength)+' (S&P flat)'],
+ ['calm_vol','Calm volatility','Is it trading normally, not in a panic?','20-day realized vol below 1.5× its 1-year median',()=>(LV.rv20*100).toFixed(0)+'% vs '+(LV.rv_thr*100).toFixed(0)+'% limit',()=>'not price-based; earliest ~'+F.dateShort(LV.vol_clear_date)],
+ ['rates_ok','Rates not spiking','Has the 10-year risen less than 50bp in 3 months?','10-yr change over 63 sessions below +0.50 pt',()=>(LV.dy63>0?'+':'')+(LV.dy63*100).toFixed(0)+'bp ('+LV.tnx.toFixed(2)+'%)',()=>'10-yr < '+LV.need_tnx_max.toFixed(2)+'%'],
+];
+const okIcon=ok=>ok?'<span class="status" style="color:var(--good)"><svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="var(--good)"/></svg>Pass</span>':'<span class="status" style="color:var(--crit)"><svg width="12" height="12"><rect x="1" y="1" width="10" height="10" fill="var(--crit)"/></svg>Fail</span>';
+function drawReg(){let h='<tr><th>Signal</th><th style="text-align:left">Question</th><th style="text-align:left">Rule</th><th>Now</th><th>Flips at next close</th><th>Status</th></tr>';
+ REG.forEach(([k,n,q,r,now,need])=>{h+=`<tr><td class="txt"><b>${n}</b></td><td class="txt">${q}</td><td class="txt">${r}</td><td>${now()}</td><td>${need()}</td><td>${okIcon(LV.components[k])}</td></tr>`});
+ h+=`<tr class="hl"><td class="txt"><b>Score</b></td><td class="txt" colspan="4">Count of passing signals</td><td><b>${LV.score} / 5</b></td></tr>`;
+ document.getElementById('regTbl').innerHTML=h;
+ const n=LV.need, v=LV.vol_clear_date, P=LV.soxx;
+ const up=x=>pct(x/P-1,0);
+ document.getElementById('regPath').innerHTML=`<p><b>What it takes from here.</b> Rates is the only signal passing, and it has just ${((LV.need_tnx_max-LV.tnx)*100).toFixed(0)}bp of headroom (the 10-year must stay below ${LV.need_tnx_max.toFixed(2)}%).</p>
+ <ul class="clean small" style="margin-top:8px">
+ <li><b>3/5 (half position):</b> rates plus the 200-day (${F.usd(n.trend)}, ${up(n.trend)}) plus calm volatility. Volatility can't clear before about ${F.date(v)} because the Nov 5–11 swings have to roll out of its 20-day window.</li>
+ <li><b>4/5 (fully long):</b> add relative strength (${F.usd(n.rel_strength)}, ${up(n.rel_strength)}) or 3-month momentum (${F.usd(n.momentum)}, ${up(n.momentum)}) at today's levels. Both bars drift down over the next two months if prices stall (see the chart below).</li>
+ <li><b>5/5 (blow-off re-entry):</b> all five at once, and a close above the 50-day (${F.usd(n.sma50)}). This is the "all clear" that would have put you back in on Apr 7.</li></ul>`}
+function drawScore(){const L=D.scoreHist.dates;mk('cScore',{type:'bar',data:{labels:L,datasets:[{label:'Score',data:D.scoreHist.score,backgroundColor:D.scoreHist.score.map(v=>v>=4?css('--good'):v===3?css('--warn'):css('--crit')),barPercentage:1,categoryPercentage:1}]},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` Score: ${i.raw} / 5`}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{min:0,max:5,ticks:Object.assign(base().scales.y.ticks,{stepSize:1})})})})})}
+const wiDay=document.getElementById('wiDay'),wiPx=document.getElementById('wiPx'),wiY=document.getElementById('wiY');
+wiPx.value=LV.soxx.toFixed(1);wiY.value=LV.tnx.toFixed(2);
+function drawWI(){const i=+wiDay.value,p=+wiPx.value,y=+wiY.value,J=LV.proj;const d=J.date[i];
+ document.getElementById('wiDayV').textContent=F.date(d);document.getElementById('wiPxV').textContent=F.usd(p)+' ('+pct(p/LV.soxx-1,0)+')';document.getElementById('wiYV').textContent=y.toFixed(2)+'%';
+ const res={trend:p>J.trend[i],momentum:p>J.momentum[i],rel_strength:p>J.rel_strength[i],calm_vol:d>=LV.vol_clear_date,rates_ok:y<J.tnx_max[i]};
+ const sc=Object.values(res).filter(Boolean).length;const above50=p>J.sma50[i];
+ const pos=sc>=4?'Fully long':sc===3?'Half position':'Flat';const bo=(sc===5&&above50)?'Re-entry triggered':'Still out';
+ const lim={trend:F.usd(J.trend[i]),momentum:F.usd(J.momentum[i]),rel_strength:F.usd(J.rel_strength[i]),calm_vol:'from '+F.dateShort(LV.vol_clear_date),rates_ok:'< '+J.tnx_max[i].toFixed(2)+'%'};
+ document.getElementById('wiOut').innerHTML=`<div class="tile"><div class="l">Score</div><div class="v">${sc} / 5</div><div class="tiny">${pos}</div></div>
+ <div class="tile"><div class="l">Blow-off strategy</div><div class="v" style="font-size:18px">${bo}</div><div class="tiny">needs 5/5 and close > 50-day (${F.usd(J.sma50[i])})</div></div>
+ <div class="tile" style="grid-column:span 2"><div class="l">Checks on ${F.dateShort(d)}</div><div class="stack" style="gap:4px;margin-top:4px">${REG.map(([k,n])=>`<div style="display:flex;justify-content:space-between;gap:8px" class="small"><span>${okIcon(res[k])} ${n}</span><span class="mono tiny">${lim[k]}</span></div>`).join('')}</div></div>`;
+ drawFlip(i,p)}
+function drawFlip(i,p){const J=LV.proj,L=J.date;const ds=[line('200-day',J.trend,css('--s7')),line('3-mo momentum',J.momentum,css('--s2')),line('Beats S&P',J.rel_strength,css('--s3')),line('50-day (re-entry)',J.sma50,css('--neutral'),{borderWidth:1.5}),
+  line('Your price',L.map(()=>p),css('--s1'),{borderDash:[6,4],borderWidth:1.5})];
+ mk('cFlip',{type:'line',data:{labels:L,datasets:ds},options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:true,items:[[L[i],'Evaluated']]},legend:{display:true,position:'top',align:'end',labels:{color:css('--ink-2'),boxWidth:12,boxHeight:3,font:{family:'Inter',size:12}}},
+  tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: $${i.raw.toFixed(2)}`}})}),
+  scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{ticks:Object.assign(base().scales.y.ticks,{callback:v=>'$'+v})})})})})}
+[wiDay,wiPx,wiY].forEach(e=>e.oninput=drawWI);
+
+function all(){bind();drawReg();drawScore();drawWI();drawRide();drawBT();drawStats();drawGrid();drawExt();drawTrend();drawStrip();drawStates();drawBreadth();small('cTnx','TNX','--s8',v=>v.toFixed(2)+'%');small('cOil','CLF','--s4',v=>'$'+v.toFixed(1));drawSens();drawPE();drawScn();drawEntry();drawPlanTbl()}
+perSel.value='2026 YTD';
+if(window.Chart){all()}else{bind();drawReg();document.querySelectorAll('.chart').forEach(c=>c.innerHTML='<p class="tiny">Charts could not load. The tables below still show the results.</p>');drawStats();drawGrid();drawStates();drawSens();drawScn();drawPlanTbl()}
+const re=()=>{if(window.Chart)all()};
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',re)}catch(e){}
+new MutationObserver(re).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawStrip,150)});
+})();
+</script>
