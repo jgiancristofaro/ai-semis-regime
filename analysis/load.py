@@ -14,3 +14,10 @@ def us_px(field='adj'):
     P = all_px()
     cal = P['SPY'].index
     return pd.DataFrame({k: getattr(v, field) for k, v in P.items()}).sort_index().reindex(cal).ffill()
+
+def fred(sid):
+    """Daily/weekly FRED series as a float Series (missing values dropped)."""
+    df = pd.read_csv(os.path.join(D, f'fred_{sid}.csv'))
+    s = pd.to_numeric(df.iloc[:, 1], errors='coerce')
+    s.index = pd.to_datetime(df.iloc[:, 0])
+    return s.dropna()

@@ -25,8 +25,22 @@ live=dict(rn, **{
 live.pop('score_hist',None)
 import datetime
 live['built']=datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+# credit check + SOXX shares-outstanding snapshots (flows build up over time)
+cr=json.load(open('credit.json'))
+import csv, os
+flows=[]
+sp=os.path.join('..','research','snapshots','soxx_shares_outstanding.csv')
+if os.path.exists(sp):
+    rows=[r for r in csv.DictReader(open(sp))]
+    for r in rows: r['d']=pd.to_datetime(r['as_of']).strftime('%Y-%m-%d')
+    for a_,b_ in zip(rows,rows[1:]):
+        px_b=float(s[:b_['d']].iloc[-1]) if len(s[:b_['d']]) else float('nan')
+        flows.append({'date':b_['d'],'shares':int(b_['shares_outstanding']),'flow_usd':(int(b_['shares_outstanding'])-int(a_['shares_outstanding']))*px_b})
+    live['shares_out']=int(rows[-1]['shares_outstanding']); live['shares_asof']=rows[-1]['d']; live['shares_since']=rows[0]['d']; live['flow_days']=len(flows)
+    live['flow_5d']=sum(f['flow_usd'] for f in flows[-5:]) if flows else None
+live['credit']=cr['dash']
 D={
- 'live':live,'scoreHist':rn['score_hist'],
+ 'live':live,'credit':{'results':cr['results'],'series':cr['series']},'flows':flows,'scoreHist':rn['score_hist'],
  'd26':bt['dates2026'],'c26':{k:bt['curves2026'][k] for k in keep},'pos26':{k:bt['positions2026'][k] for k in keep},
  'stats':{k:bt['stats'][k] for k in keep},
  'ind':{k:bt['ind'][k] for k in ['soxx','sma50','sma200','ext200','ext_thr','score']},'comp':bt['components_hist'],

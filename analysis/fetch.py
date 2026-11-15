@@ -27,7 +27,23 @@ for t in TICKERS:
                 bad.append(f'{t}: {e}')
             time.sleep(2 ** attempt)
 
-print('fetched', len(TICKERS) - len(bad), 'of', len(TICKERS))
+# FRED series (public CSV endpoint, no key): Baa-10y spread, HY OAS (3y history only), 10y real yield, Chicago Fed NFCI
+FRED = ['BAA10Y', 'BAMLH0A0HYM2', 'DFII10', 'NFCI']
+for sid in FRED:
+    for attempt in range(4):
+        try:
+            req = urllib.request.Request(f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}', headers={'User-Agent': 'ai-semis-regime/1.0 (+https://github.com/jgiancristofaro/ai-semis-regime)'})  # FRED stalls bare 'Mozilla/5.0'
+            body = urllib.request.urlopen(req, timeout=30, context=ctx).read()
+            assert body.count(b'\n') > 500, 'too few rows'
+            with open(os.path.join(OUT, f'fred_{sid}.csv'), 'wb') as f:
+                f.write(body)
+            break
+        except Exception as e:
+            if attempt == 3:
+                bad.append(f'FRED {sid}: {e}')
+            time.sleep(2 ** attempt)
+
+print('fetched', len(TICKERS) + len(FRED) - len(bad), 'of', len(TICKERS) + len(FRED))
 if bad:
     print('FAILED:', *bad, sep='\n  ')
     sys.exit(1)

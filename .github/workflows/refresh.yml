@@ -1,6 +1,6 @@
 name: Daily refresh
 
-# Rebuilds the report from fresh market data and publishes it to GitHub Pages.
+# Rebuilds the report from fresh market data, records daily snapshots, and publishes to GitHub Pages.
 on:
   schedule:
     - cron: "17 22 * * 1-5"   # 22:17 UTC weekdays = 5:17pm ET (winter) / 6:17pm ET (summer), after the US close
@@ -10,13 +10,13 @@ on:
     paths: ["analysis/**", ".github/workflows/**"]
 
 permissions:
-  contents: read
+  contents: write   # commit research/snapshots/ (history that has no free source)
   pages: write
   id-token: write
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -33,8 +33,17 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Fetch prices, rerun analyses, build page
+      - name: Fetch data, rerun analyses, build page
         run: python analysis/update.py
+
+      - name: Commit new snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/snapshots
+          if git diff --cached --quiet; then echo "no new snapshots"; exit 0; fi
+          git commit -m "Daily snapshot $(date -u +%F)"
+          git pull --rebase origin main && git push origin HEAD:main
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -11,6 +11,7 @@ It covers:
 - **Momentum, breadth and macro sensitivity**, including how semis' behaviour changed in the second half of 2026.
 - **Valuation and demand evidence** (agentic AI, AI-accelerated R&D, sold-out supply) with sources.
 - **Entry-plan backtest** across 15 prior semiconductor drawdowns, comparing lump-sum, monthly tranches and waiting for the trend.
+- **Credit check.** Broad credit spreads from FRED, tested as a candidate sixth regime signal and tracked as a kill switch.
 
 > Research, not investment advice. Backtests use daily adjusted closes, a one-day signal lag, 5bp per-side costs and 0% on cash.
 
@@ -59,9 +60,19 @@ The page is written to `site/index.html`. Use `--skip-fetch` to rebuild from dat
 | `analysis/grid.py` | 27-variant robustness grid for the blow-off exit |
 | `analysis/staged.py` | Entry-plan backtest over 15 prior drawdowns |
 | `analysis/regime_now.py` | Current regime checks, exact flip prices, 60-day projection |
+| `analysis/credit.py` | FRED credit spreads: dashboard plus a backtest of credit as a veto or sixth signal |
+| `analysis/snapshot.py` | Records SOXX shares outstanding daily (iShares) into `research/snapshots/`, building a flow history |
 | `analysis/bundle.py` | Packs all outputs into the page's data block |
 | `analysis/template.html` | The page; `update.py` injects data and writes `site/index.html` |
 
 ## Data notes
+
+| Source | Used for | Account needed |
+|---|---|---|
+| Yahoo Finance chart API | Daily prices for ETFs, stocks, indices, yields, oil | No |
+| FRED (St. Louis Fed) | Baa–10y spread, high-yield OAS, 10y real yield, NFCI | No |
+| iShares SOXX product page | Daily shares outstanding, for flows | No |
+
+Some data has no free history, such as ETF shares outstanding. The workflow records those values each day in `research/snapshots/` and commits them, so the history grows over time.
 
 Prices come from Yahoo Finance's public chart endpoint. It is unofficial, so it can rate-limit or change without notice. If a download fails, the workflow fails and the last good page stays live. Raw price files are not committed.

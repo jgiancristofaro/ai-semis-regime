@@ -277,6 +277,17 @@ ol.src a{word-break:break-word}
       <div class="panel"><h3>WTI crude ($/bbl)</h3><div class="chart sm"><canvas id="cOil"></canvas></div></div>
     </div>
     <div class="panel tbl-wrap"><table id="sensTbl"></table></div>
+    <div class="panel stack" id="credit">
+      <h3>Credit check: is the AI credit stress spreading?</h3>
+      <p class="small">CoreWeave and Oracle credit came under real pressure this fall. The question for a broader sell-off is whether that stress spreads into the general bond market, as it did in 2008. So far it hasn't. Broad credit spreads are near the tightest levels on record, and the pressure on stocks is coming from rising real yields instead.</p>
+      <div class="tiles" id="crTiles" style="margin-top:0"></div>
+      <div class="chart sm"><canvas id="cCredit" aria-label="Baa and high-yield credit spreads"></canvas></div>
+      <p class="tiny">Spread over Treasuries, percentage points. FRED: Moody's Baa minus 10-yr Treasury (BAA10Y); ICE BofA US High Yield OAS (BAMLH0A0HYM2; FRED carries only the last 3 years). Chicago Fed financial conditions index (NFCI): <span data-live="credit.nfci.now" data-fmt="num2"></span>; below 0 means looser than average.</p>
+      <h3 style="margin-top:6px">Would a credit signal have improved the regime model?</h3>
+      <p class="small muted">We tested the Baa spread two ways, with no tuning on 2026: as a veto that halves the position when credit is stressed, and as a sixth vote in the score. "Stressed" means the spread widened more than 0.30 or 0.50 points over 63 sessions.</p>
+      <div class="tbl-wrap"><table id="crTbl"></table></div>
+      <p class="small"><b>Verdict:</b> credit never flagged stress in 2026, so it wouldn't have changed the July exit. Over 2002–2025 it helped modestly and consistently; the gains show up in the 2007–09 and 2020–25 windows. We keep the five-signal model and track credit as a kill switch: stop adding if the Baa spread widens more than 0.30 points in 3 months. It is currently <span data-live="credit.dbaa63_now" data-fmt="pts"></span> over that window.</p>
+    </div>
   </section>
 
   <!-- 5 -->
@@ -372,6 +383,7 @@ ol.src a{word-break:break-word}
           <li>Consensus SOX forward EPS revised down <b>more than 10%</b> in a quarter. That is the 2001/2008 signature.</li>
           <li>An AI-infrastructure credit event, such as a CoreWeave-type default or a failed data-center financing.</li>
           <li>10-year above <b>5.5%</b>, or the Fed signalling multiple further hikes.</li>
+          <li>Broad credit cracks: the Baa–Treasury spread widens more than <b>0.30 pt in 3 months</b> (now <span data-live="credit.dbaa63_now" data-fmt="pts"></span>, level <span data-live="credit.baa.now" data-fmt="pct2"></span>).</li>
         </ul></div>
       <div class="panel stack"><h3>Catalyst calendar</h3>
         <div class="tbl-wrap"><table>
@@ -556,7 +568,7 @@ function drawPlanTbl(){const med=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const get=(o,p)=>p.split('.').reduce((a,k)=>a==null?a:a[k],o);
 const F={usd:v=>'$'+v.toFixed(2),usd0:v=>'$'+v.toFixed(0),pct:v=>pct(v,1),pct0:v=>pct(v,0),int:v=>String(Math.round(v)),
- date:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)+', '+y},dateShort:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)},list:v=>v.join(', ')};
+ date:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)+', '+y},dateShort:v=>{const [y,m,d]=v.split('-');return MON[+m-1]+' '+(+d)},list:v=>v.join(', '),pts:v=>(v>0?'+':'')+v.toFixed(2)+' pt',pct2:v=>v.toFixed(2)+'%',num2:v=>v.toFixed(2)};
 function bind(){document.querySelectorAll('[data-live]').forEach(el=>{const v=get(D.live,el.dataset.live);if(v==null)return;el.textContent=(F[el.dataset.fmt]||String)(v)})}
 
 // ---------- regime model ----------
@@ -602,9 +614,25 @@ function drawFlip(i,p){const J=LV.proj,L=J.date;const ds=[line('200-day',J.trend
   scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{ticks:Object.assign(base().scales.y.ticks,{callback:v=>'$'+v})})})})})}
 [wiDay,wiPx,wiY].forEach(e=>e.oninput=drawWI);
 
-function all(){bind();drawReg();drawScore();drawWI();drawRide();drawBT();drawStats();drawGrid();drawExt();drawTrend();drawStrip();drawStates();drawBreadth();small('cTnx','TNX','--s8',v=>v.toFixed(2)+'%');small('cOil','CLF','--s4',v=>'$'+v.toFixed(1));drawSens();drawPE();drawScn();drawEntry();drawPlanTbl()}
+// ---------- credit ----------
+function drawCredit(){const c=D.live.credit;const pc=v=>(v*100).toFixed(0);
+ const flowTile=D.live.shares_out?`<div class="tile"><div class="l">SOXX shares outstanding</div><div class="v">${(D.live.shares_out/1e6).toFixed(1)}M</div><div class="tiny">${D.live.flow_days>0?'5-day flow '+(D.live.flow_5d>=0?'+':'−')+'$'+Math.abs(D.live.flow_5d/1e6).toFixed(0)+'M':'daily tracking since '+F.dateShort(D.live.shares_since)+'; flows appear from the next refresh'}</div></div>`:'';
+ document.getElementById('crTiles').innerHTML=`<div class="tile"><div class="l">Baa – 10-yr spread</div><div class="v">${c.baa.now.toFixed(2)} pt</div><div class="tiny">${(c.baa.chg63>0?'+':'')+c.baa.chg63.toFixed(2)} pt in 3 mo · tighter than ${100-pc(c.baa.pctile_since_1986)}% of days since 1986</div></div>
+ <div class="tile"><div class="l">High-yield spread</div><div class="v">${c.hy.now.toFixed(2)} pt</div><div class="tiny">${(c.hy.chg63>0?'+':'')+c.hy.chg63.toFixed(2)} pt in 3 mo · 2026 range ${c.hy.min26.toFixed(2)}–${c.hy.max26.toFixed(2)}</div></div>
+ <div class="tile"><div class="l">10-yr real yield</div><div class="v">${c.real10.now.toFixed(2)}%</div><div class="tiny">${(c.real10.chg63>0?'+':'')+(c.real10.chg63*100).toFixed(0)}bp in 3 mo: the actual squeeze</div></div>
+ ${flowTile||`<div class="tile"><div class="l">Financial conditions (NFCI)</div><div class="v">${c.nfci.now.toFixed(2)}</div><div class="tiny">below 0 = looser than average</div></div>`}`;
+ const S=D.credit.series,L=S.dates;mk('cCredit',{type:'line',data:{labels:L,datasets:[line('High-yield OAS',S.hy,css('--s8')),line('Baa – 10-yr',S.baa,css('--s7'))]},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:true,items:[['2026-06-22','Semis peak']]},legend:{display:true,position:'top',align:'end',labels:{color:css('--ink-2'),boxWidth:12,boxHeight:3,font:{family:'Inter',size:12}}},
+  tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: ${i.raw==null?'n/a':i.raw.toFixed(2)+' pt'}`}})}),
+ scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{min:0,ticks:Object.assign(base().scales.y.ticks,{callback:v=>v+' pt'})})})})})}
+function drawCrTbl(){const R=D.credit.results,W=['2026 YTD','2002-2025','2007-2009 (GFC)','2020-2025'];
+ let h='<tr><th>Variant</th>'+W.map(w=>`<th>${w}<br><span class="tiny">return · Sharpe</span></th>`).join('')+'</tr>';
+ Object.keys(R).forEach(k=>{h+=`<tr${k.startsWith('Baseline')?' class="hl"':''}><td class="txt">${k}</td>`+W.map(w=>{const x=R[k][w];return `<td><span class="${x.total>=0?'pos':'neg'}">${pct(x.total,0)}</span> · ${x.sharpe.toFixed(2)}</td>`}).join('')+'</tr>'});
+ document.getElementById('crTbl').innerHTML=h}
+
+function all(){bind();drawCredit();drawCrTbl();drawReg();drawScore();drawWI();drawRide();drawBT();drawStats();drawGrid();drawExt();drawTrend();drawStrip();drawStates();drawBreadth();small('cTnx','TNX','--s8',v=>v.toFixed(2)+'%');small('cOil','CLF','--s4',v=>'$'+v.toFixed(1));drawSens();drawPE();drawScn();drawEntry();drawPlanTbl()}
 perSel.value='2026 YTD';
-if(window.Chart){all()}else{bind();drawReg();document.querySelectorAll('.chart').forEach(c=>c.innerHTML='<p class="tiny">Charts could not load. The tables below still show the results.</p>');drawStats();drawGrid();drawStates();drawSens();drawScn();drawPlanTbl()}
+if(window.Chart){all()}else{bind();drawReg();drawCrTbl();document.querySelectorAll('.chart').forEach(c=>c.innerHTML='<p class="tiny">Charts could not load. The tables below still show the results.</p>');drawStats();drawGrid();drawStates();drawSens();drawScn();drawPlanTbl()}
 const re=()=>{if(window.Chart)all()};
 try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',re)}catch(e){}
 new MutationObserver(re).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
