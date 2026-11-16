@@ -4,7 +4,7 @@ Rules: signal computed on close t, position taken at close t+1 (1-day lag, no lo
 Cash earns 0% (conservative). Transaction cost 5 bp per side.
 Parameters are textbook defaults, NOT tuned on 2026.
 """
-import json, numpy as np, pandas as pd
+import json, os, numpy as np, pandas as pd
 from load import all_px, us_px
 
 P = all_px()
@@ -65,6 +65,15 @@ for i, d in enumerate(s.index):
     blow.iloc[i] = state
 sig['Composite + Blow-off Exit'] = sig['Regime Composite'].where(blow == 0, 0.0)
 
+# SOXX Regime Monitor positions (its own state machine, run by research/oos_monitor/oos_monitor.py).
+# Its yearly warm-up (first ~20 sessions) carries the prior year-end position, as a holder would in practice.
+_mp = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'research', 'oos_monitor', 'monitor_positions.csv')
+if os.path.exists(_mp):
+    _m = pd.read_csv(_mp, index_col=0, parse_dates=True)
+    _mon = _m['pos'].mask(_m.get('warm', 0).astype(bool)).reindex(s.index).ffill().fillna(0.0)
+    # run() lags signals one day; the monitor fills at its signal close, so feed it one day early.
+    sig['SOXX Regime Monitor'] = _mon.shift(-1).fillna(_mon.iloc[-1])
+    sig['Monitor + 50/200'] = 0.5 * sig['SOXX Regime Monitor'] + 0.5 * sig['50/200 Cross']
 sig['Buy & Hold'] = pd.Series(1.0, index=s.index)
 
 def run(w, start=None, end=None):

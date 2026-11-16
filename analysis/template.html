@@ -104,7 +104,7 @@ ol.src a{word-break:break-word}
   <div class="hero">
     <div class="stack">
       <h1>AI semis after the peak: the fundamentals say buy, the tape says wait. Do both, in tranches.</h1>
-      <p class="lede">A rules-based regime model would have held SOXX from late December 2025, side-stepped the March oil shock, and exited on <b><span data-live="bo_exit" data-fmt="date"></span></b>, three weeks after the top. It made <span data-live="bo26.total" data-fmt="pct0"></span> vs <span data-live="bh26.total" data-fmt="pct0"></span> buy-and-hold. The same model now scores <b><span data-live="score" data-fmt="int"></span> of 5</b> (see section 03 for what that means). Valuations have roughly halved while earnings estimates kept rising, and agentic demand is real. Our backtests say the right response is to start buying, but slowly.</p>
+      <p class="lede">Two rules-based models would have caught the 2026 top. A trend-stretch model held SOXX from late December, side-stepped the March oil shock and exited on <b><span data-live="bo_exit" data-fmt="dateShort"></span></b>: <span data-live="bo26.total" data-fmt="pct0"></span> vs <span data-live="bh26.total" data-fmt="pct0"></span> buy-and-hold. The SOXX Regime Monitor's institutional-flow signal exited on <b>Jun 18</b>, four days before the peak: <span data-live="mon26.total" data-fmt="pct0"></span>. Combining the monitor with a 50/200-day trend filter gives the best long-run risk-adjusted record we found, and that combined signal now reads <b><span data-live="blend.pos" data-fmt="pctp"></span></b>. Valuations have roughly halved while earnings estimates and capex kept rising. Our backtests say start buying, but on a schedule.</p>
       <p class="small muted">This is research, not personal financial advice. Backtests use daily adjusted closes from Yahoo Finance (through <span data-live="asof" data-fmt="date"></span>), a one-day signal lag, 5bp per-side costs and 0% on cash. Single-source or secondary figures are flagged. Prices, signals and backtests refresh from market data each trading day; the research narrative, valuation and source citations are a Nov 15, 2026 snapshot.</p>
     </div>
     <aside class="rating" aria-label="Rating summary">
@@ -163,13 +163,18 @@ ol.src a{word-break:break-word}
   <!-- 2 -->
   <section id="backtest">
     <div class="sec-head"><span class="n">02</span><h2>The backtest: buy in January, get out in July</h2></div>
-    <p>We tested five pre-specified rules on SOXX using textbook parameters, none tuned on 2026. The one that fits your narrative is the <b>Regime Composite + Blow-off Exit</b>. Its regime score has five parts: price above the 200-day, 3-month momentum, strength versus the S&amp;P, calm volatility, and the 10-year not up more than 50bp in three months. On top of that sits one overextension rule: if SOXX has been stretched beyond the 95th percentile of its own history above the 200-day and then closes below its 50-day, exit. Re-enter only when all five regime signals agree. Section 03 explains each signal and what it takes to flip it.</p>
+    <p>We tested seven rule sets on SOXX. Two of them caught the top, by reading different things:</p>
+    <ul class="clean">
+      <li><b>Composite + Blow-off Exit (price stretch).</b> A five-part regime score (section 03) plus one overextension rule: if SOXX has been stretched beyond the 95th percentile of its own history above the 200-day and then closes below its 50-day, exit. Textbook parameters, none tuned on 2026. Exited Jul 14.</li>
+      <li><b>SOXX Regime Monitor (who is buying).</b> Your earlier system: it flags distribution when US-session moves turn negative while the price still rises, then sells into the next strong day (section 04). Its thresholds were set on Jan–Jul 2026, so its 2026 result is in-sample. Exited Jun 18.</li>
+      <li><b>Monitor + 50/200 (combined, recommended).</b> Half the monitor's position plus half a 50/200-day trend filter. It's the exposure gauge the recommendation uses: it has the best 2002–2025 risk-adjusted record and was never fully out in 2026.</li>
+    </ul>
     <div class="panel">
       <div class="toolbar"><div class="chips" id="stratChips" role="group" aria-label="Show strategies"></div>
         <label class="small muted" for="bandSel">Shade when long:</label>
         <select id="bandSel"></select></div>
       <div class="chart"><canvas id="cBT" aria-label="Strategy equity curves since Oct 2025"></canvas></div>
-      <p class="tiny">Growth of $1 from Oct 1, 2025. The shading shows when the selected strategy held SOXX.</p>
+      <p class="tiny">Growth of $1 from Oct 1, 2025. The shading shows when the selected strategy held any SOXX. The monitor fills at its signal close; during its yearly warm-up (first ~20 sessions) we carry the prior year-end position, as a holder would.</p>
     </div>
     <div class="cols">
       <div class="panel stack">
@@ -184,14 +189,19 @@ ol.src a{word-break:break-word}
         </ul>
       </div>
       <div class="panel stack">
-        <div class="toolbar" style="margin:0"><h3 style="margin-right:auto">Results by period</h3><select id="perSel" aria-label="Backtest period"></select></div>
-        <div class="tbl-wrap"><table id="statTbl"></table></div>
+        <h3>Trade log: SOXX Regime Monitor (2026)</h3>
+        <div class="tbl-wrap"><table id="monTrades"></table></div>
+        <p class="tiny">As published by the monitor; prices adjusted for the November 3-for-1 split. MONITOR (60% position) periods between trades aren't listed.</p>
       </div>
     </div>
-    <div class="callout"><p><b>Caveat.</b> From 2002 to 2025 none of these five rules beat buy-and-hold on total return (the SOXX Regime Monitor in section 04 is the exception). Their value was cutting drawdowns: the 50/200 cross took max drawdown from −67% to −34% and had the best Sharpe. The blow-off exit is a tail-event tool. It paid off in 2026 because the stretch was nearly twice anything seen since 2001, and in ordinary years it costs you.</p></div>
+    <div class="panel stack">
+        <div class="toolbar" style="margin:0"><h3 style="margin-right:auto">Results by period</h3><select id="perSel" aria-label="Backtest period"></select></div>
+        <div class="tbl-wrap"><table id="statTbl"></table></div>
+    </div>
+    <div class="callout"><p><b>Caveat.</b> Over full calendar years 2002–2025, no rule beat buy-and-hold's 14.3% a year. What the better rules buy you is risk control. The combined signal made 13.2% a year with the best Sharpe ratio (0.70 vs 0.58) and half the worst drawdown (−32% vs −67%). The 50/200 filter alone came close (0.68, −34%); the monitor's part is catching distribution tops like June's, which a slow trend filter misses. The blow-off exit was a 2026 special: it paid off because the stretch was nearly twice anything seen since 2001, but it made only 8.0% a year over 2002–2025.</p></div>
 
     <div class="panel stack">
-      <h3>Robustness: was July 14 a lucky parameter?</h3>
+      <h3>Robustness of the blow-off rule: was July 14 a lucky parameter?</h3>
       <p class="small muted">Change the rule's inputs. <span data-live="grid_beat"></span> of 27 combinations beat 2026 buy-and-hold (<span data-live="bh26.total" data-fmt="pct"></span>), returning <span data-live="grid_min" data-fmt="pct0"></span> to <span data-live="grid_max" data-fmt="pct0"></span>. Only the exit moving average changes the sell date: 20-day → Jun 8, 50-day → Jul 14, 100-day → Jul 30.</p>
       <div class="cols3">
         <div class="ctl"><label for="gBase">Base strategy</label><select id="gBase"><option value="hold">Buy &amp; hold</option><option value="trend">Trend 200d</option><option value="composite" selected>Regime composite</option></select></div>
@@ -275,7 +285,7 @@ ol.src a{word-break:break-word}
         <ul class="clean small" id="monReentry"></ul></div>
       <div class="panel stack"><h3>What we adopted, and what we didn't</h3>
         <ul class="clean small">
-          <li><b>Adopted: the combined signal</b> (½ monitor + ½ 50/200 cross) as the exposure gauge. It was the best risk-adjusted model in every period tested: Sharpe 0.69 vs 0.49 for buy-and-hold over 2002–2025, with max drawdown −32% vs −67%.</li>
+          <li><b>Adopted: the combined signal</b> (½ monitor + ½ 50/200 cross) as the exposure gauge. It was the best risk-adjusted model over 2002–2025 as a whole: Sharpe 0.69 vs 0.49 for buy-and-hold in these windows, with max drawdown −32% vs −67%. It doesn't win every sub-period; in 2010–19 buy-and-hold's Sharpe was about the same.</li>
           <li><b>Adopted: monitor re-entry as the tranche accelerator.</b> In 12 prior deep drawdowns, buying all remaining tranches when the monitor re-entered averaged +35.8% over 12 months vs +28.4% for the plain schedule, and was better in 8 of 12.</li>
           <li><b>Not adopted: volatility-scaled tranche size.</b> It made no difference across the same episodes (16.9% vs 17.0% mean).</li>
           <li><b>Demoted: this page's 5-factor regime score.</b> It explains 2026 well, but it was the weakest model over 2002–2025 (Sharpe 0.37), so it no longer paces the buying.</li>
@@ -549,18 +559,21 @@ chipSet(document.getElementById('tickChips'),T,tOn,drawRide);
 document.getElementById('evtBtn').onclick=e=>{evOn=!evOn;e.currentTarget.setAttribute('aria-pressed',evOn);drawRide()};
 
 // ---------- 2. Backtest ----------
-const S=[['Buy & Hold','Buy & hold','--neutral'],['Trend 200d','Trend 200d','--s2'],['50/200 Cross','50/200 cross','--s3'],['Regime Composite','Regime composite','--s7'],['Composite + Blow-off Exit','Composite + Blow-off','--s1']];
-const sOn=new Set(['Buy & Hold','Trend 200d','Composite + Blow-off Exit']);
-const bandSel=document.getElementById('bandSel');S.forEach(s=>{const o=new Option(s[1],s[0]);bandSel.add(o)});bandSel.value='Composite + Blow-off Exit';
-function drawBT(){const L=D.d26;mk('cBT',{type:'line',data:{labels:L,datasets:S.filter(s=>sOn.has(s[0])).map(s=>line(s[1],D.c26[s[0]],css(s[2]),s[0]==='Buy & Hold'?{borderDash:[5,4]}:{borderWidth:s[0].startsWith('Composite +')?2.5:2}))},
- options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:true,band:D.pos26[bandSel.value],items:[['2026-06-22','Peak'],['2026-07-14','Exit']]},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: $${i.raw.toFixed(2)}`}})}),
+const S=[['Buy & Hold','Buy & hold','--neutral'],['Trend 200d','Trend 200d','--s2'],['50/200 Cross','50/200 cross','--s3'],['Regime Composite','Regime composite','--s7'],['Composite + Blow-off Exit','Composite + Blow-off','--s1'],['SOXX Regime Monitor','SOXX Regime Monitor','--s5'],['Monitor + 50/200','Monitor + 50/200 (combined)','--s6']].filter(s=>D.c26[s[0]]);
+const sOn=new Set(['Buy & Hold','Composite + Blow-off Exit','SOXX Regime Monitor','Monitor + 50/200']);
+const bandSel=document.getElementById('bandSel');S.forEach(s=>{const o=new Option(s[1],s[0]);bandSel.add(o)});bandSel.value=D.c26['SOXX Regime Monitor']?'SOXX Regime Monitor':'Composite + Blow-off Exit';
+function drawBT(){const L=D.d26;mk('cBT',{type:'line',data:{labels:L,datasets:S.filter(s=>sOn.has(s[0])).map(s=>line(s[1],D.c26[s[0]],css(s[2]),s[0]==='Buy & Hold'?{borderDash:[5,4]}:{borderWidth:s[0]==='Monitor + 50/200'?2.75:2}))},
+ options:Object.assign(base(),{plugins:Object.assign(base().plugins,{ev:{on:true,band:D.pos26[bandSel.value],items:[['2026-06-18','Monitor exit'],['2026-06-22','Peak'],['2026-07-14','Blow-off exit']]},tooltip:Object.assign(base().plugins.tooltip,{callbacks:{title:i=>fmtD(i[0].label),label:i=>` ${i.dataset.label}: $${i.raw.toFixed(2)}`}})}),
  scales:Object.assign(base().scales,{x:Object.assign(base().scales.x,{ticks:Object.assign(base().scales.x.ticks,{callback:v=>fmtD(L[v])})}),y:Object.assign(base().scales.y,{ticks:Object.assign(base().scales.y.ticks,{callback:v=>'$'+v.toFixed(2)})})})})})}
 chipSet(document.getElementById('stratChips'),S,sOn,drawBT);bandSel.onchange=drawBT;
 const perSel=document.getElementById('perSel');Object.keys(D.stats['Buy & Hold']).forEach(p=>perSel.add(new Option(p,p)));
 function drawStats(){const p=perSel.value;let h='<tr><th>Strategy</th><th>Return</th><th>CAGR</th><th>Sharpe</th><th>Max DD</th><th>In mkt</th></tr>';
- S.forEach(s=>{const x=D.stats[s[0]][p];h+=`<tr${s[0].startsWith('Composite +')?' class="hl"':''}><td class="txt">${s[1]}</td><td class="${x.total>=0?'pos':'neg'}">${pct(x.total,0)}</td><td>${p==='2026 YTD'?'n/a':pct(x.cagr)}</td><td>${x.sharpe.toFixed(2)}</td><td class="neg">${pct(x.maxdd,0)}</td><td>${(x.time_in*100).toFixed(0)}%</td></tr>`});
+ S.forEach(s=>{const x=D.stats[s[0]][p];h+=`<tr${s[0]==='Monitor + 50/200'?' class="hl"':''}><td class="txt">${s[1]}</td><td class="${x.total>=0?'pos':'neg'}">${pct(x.total,0)}</td><td>${p==='2026 YTD'?'n/a':pct(x.cagr)}</td><td>${x.sharpe.toFixed(2)}</td><td class="neg">${pct(x.maxdd,0)}</td><td>${(x.time_in*100).toFixed(0)}%</td></tr>`});
  document.getElementById('statTbl').innerHTML=h}
 perSel.onchange=drawStats;
+function drawMonTrades(){const el=document.getElementById('monTrades');const T=(D.mon&&D.mon.trades)||[];
+ if(!T.length){el.innerHTML='<tr><td class="txt">Trade log unavailable.</td></tr>';return}
+ el.innerHTML='<tr><th>Date</th><th>Action</th><th>Price</th><th style="text-align:left">Reason</th></tr>'+T.map(x=>`<tr${x.date==='2026-06-18'?' class="hl"':''}><td>${F.dateShort(x.date)}</td><td class="${x.action==='EXIT'?'neg':'pos'}">${x.action==='EXIT'?'Exit':'Re-enter'}</td><td>${F.usd(x.price)}</td><td class="txt">${x.reason.replace('exec-into-strength','sold into a strong day').replace('disarm','alarm cleared')}</td></tr>`).join('')}
 // grid
 function drawGrid(){const b=gBase.value,p=+gPct.value,m=+gMa.value;const r=D.grid.find(g=>g.base===b&&Math.abs(g.pct-p)<1e-6&&g.ma===m);
  const last=r.exits26[r.exits26.length-1];
@@ -747,7 +760,7 @@ function drawMon(){const M=D.live.monitor,O=D.oos;if(!M||!O||!O.oos){document.ge
  <li><b>Disarm:</b> the distribution alarm clears, meaning US-session selling eases enough that the arm conditions are no longer true.</li>
  <li class="tiny">State as published by the monitor for ${F.date(M.last_session)}. When any of these fire, the accelerator rule in the recommendation applies.</li>`}
 
-function all(){bind();drawMon();drawEst();drawCapex();drawCredit();drawCrTbl();drawReg();drawScore();drawWI();drawRide();drawBT();drawStats();drawGrid();drawExt();drawTrend();drawStrip();drawStates();drawBreadth();small('cTnx','TNX','--s8',v=>v.toFixed(2)+'%');small('cOil','CLF','--s4',v=>'$'+v.toFixed(1));drawSens();drawPE();drawScn();drawEntry();drawPlanTbl()}
+function all(){bind();drawMonTrades();drawMon();drawEst();drawCapex();drawCredit();drawCrTbl();drawReg();drawScore();drawWI();drawRide();drawBT();drawStats();drawGrid();drawExt();drawTrend();drawStrip();drawStates();drawBreadth();small('cTnx','TNX','--s8',v=>v.toFixed(2)+'%');small('cOil','CLF','--s4',v=>'$'+v.toFixed(1));drawSens();drawPE();drawScn();drawEntry();drawPlanTbl()}
 perSel.value='2026 YTD';
 if(window.Chart){all()}else{bind();drawReg();drawCrTbl();document.querySelectorAll('.chart').forEach(c=>c.innerHTML='<p class="tiny">Charts could not load. The tables below still show the results.</p>');drawStats();drawGrid();drawStates();drawSens();drawScn();drawPlanTbl()}
 const re=()=>{if(window.Chart)all()};

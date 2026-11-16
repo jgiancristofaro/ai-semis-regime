@@ -67,7 +67,7 @@ The page is written to `site/index.html`. Use `--skip-fetch` to rebuild from dat
 
 ## SOXX Regime Monitor, tested out of sample
 
-`research/oos_monitor/` runs the [SOXX Regime Monitor](https://github.com/jgiancristofaro/soxx-regime-monitor)'s state machine, unchanged, on SOXX for 2002–2025, then blends it with this repo's models. `oos_monitor.py` takes the path to a checkout of that repo. The daily pipeline (`analysis/monitor.py`) reads the monitor's live published state for the combined exposure signal and the re-entry watch list.
+`research/oos_monitor/` runs the [SOXX Regime Monitor](https://github.com/jgiancristofaro/soxx-regime-monitor)'s state machine, unchanged, on SOXX for 2002–2025, then blends it with this repo's models. It runs a pinned, unmodified copy of the monitor's `state_machine.py` vendored in `analysis/vendor/soxx_regime_monitor/` (MIT; source commit in the file header), and runs daily so section 2's monitor and combined models stay current. Re-copy that file when the monitor's rules change, or pass a checkout path to `oos_monitor.py` to test the latest code. The daily pipeline (`analysis/monitor.py`) reads the monitor's live published state for the combined exposure signal and the re-entry watch list.
 
 ## Data notes
 

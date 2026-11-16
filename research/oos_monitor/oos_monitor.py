@@ -2,7 +2,7 @@
 Out-of-sample test of the SOXX Regime Monitor (github.com/jgiancristofaro/soxx-regime-monitor) state machine,
 using its own code unchanged, on SOXX 2002-2025 (it was calibrated on Jan-Jul 2026 only).
 
-Usage: python oos_monitor.py /path/to/soxx-regime-monitor
+Usage: python oos_monitor.py [/path/to/soxx-regime-monitor]  (defaults to analysis/vendor/soxx_regime_monitor)
 Data: Tiingo adjusted OHLCV for SOXX from ../../data/tiingo_SOXX.json (fetched by analysis/fetch.py).
 Method: derived signals on full history; the state machine runs per calendar year (it resets each Jan 1, as in
 production); yearly equity uses the monitor's own _run_backtest (from Jan 20, 5bp per side, cash at 0%).
@@ -10,8 +10,10 @@ production); yearly equity uses the monitor's own _run_backtest (from Jan 20, 5b
 import json, os, sys
 import numpy as np, pandas as pd
 
-repo = sys.argv[1] if len(sys.argv) > 1 else '/home/user/jgiancristofaro/soxx-regime-monitor'
-sys.path.insert(0, os.path.join(repo, 'pipeline'))
+HERE0 = os.path.dirname(os.path.abspath(__file__))
+# Default: the pinned copy vendored in analysis/vendor/; or pass a path to a soxx-regime-monitor checkout to test its latest code.
+sm_dir = os.path.join(sys.argv[1], 'pipeline') if len(sys.argv) > 1 else os.path.join(HERE0, '..', '..', 'analysis', 'vendor', 'soxx_regime_monitor')
+sys.path.insert(0, sm_dir)
 import state_machine as sm  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -35,6 +37,7 @@ for y in range(2002, 2027):
     trades_all += [dict(t, year=y) for t in trades]
     daily.append(pd.DataFrame({'s': s.pct_change().fillna(s.iloc[0] - 1), 'b': b.pct_change().fillna(b.iloc[0] - 1)}))
     daily[-1]['pos'] = pos
+    daily[-1]['warm'] = pd.Series([st == sm.WARMUP for st in states], index=ytd.index)[s.index].astype(int)
 
 Y = pd.DataFrame(years).set_index('year')
 d = pd.concat(daily)
@@ -52,7 +55,7 @@ out = {'years': Y.reset_index().to_dict('records'), 'summary': summary, 'beat_ye
        'trades_per_year': float(Y.loc[:2025, 'trades'].mean()), 'trades_2026': [t for t in trades_all if t['year'] == 2026],
        'last_state': states[-1], 'note': 'Equity per year from Jan 20 (monitor warm-up), chained; cash 0%, 5bp per side.'}
 json.dump(out, open(os.path.join(HERE, 'oos_results.json'), 'w'), indent=1, default=str)
-d[['pos']].to_csv(os.path.join(HERE, 'monitor_positions.csv'))
+d[['pos', 'warm']].to_csv(os.path.join(HERE, 'monitor_positions.csv'))
 
 pd.set_option('display.width', 200)
 print(Y.round(3).to_string())

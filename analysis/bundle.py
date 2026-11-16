@@ -3,7 +3,7 @@ import json, pandas as pd, numpy as np
 from load import us_px
 bt=json.load(open('bt.json')); dp=json.load(open('deeper.json')); grid=json.load(open('grid.json'))
 st=json.load(open('staged.json')); rn=json.load(open('regime_now.json'))
-keep=['Buy & Hold','Trend 200d','50/200 Cross','Regime Composite','Composite + Blow-off Exit']
+keep=[k for k in ['Buy & Hold','Trend 200d','50/200 Cross','Regime Composite','Composite + Blow-off Exit','SOXX Regime Monitor','Monitor + 50/200'] if k in json.load(open('bt.json'))['stats']]
 
 # ---- live "as of" figures used throughout the page ----
 px=us_px(); px=px[px.index<=px['SOXX'].last_valid_index()]
@@ -19,6 +19,7 @@ live=dict(rn, **{
  'breadth_n':len(above),'breadth_names':above,'state':state,
  'ext_peak':bt['ext_peak2026'],'ext_peak_date':bt['ext_peak2026_date'],'ext_prior_max':max(v for k,v in bt['ext_hist_max'].items() if k!='2026'),
  'bh26':s26['Buy & Hold']['2026 YTD'],'bo26':s26['Composite + Blow-off Exit']['2026 YTD'],
+ 'mon26':s26.get('SOXX Regime Monitor',{}).get('2026 YTD'),'comb26':s26.get('Monitor + 50/200',{}).get('2026 YTD'),
  'bo_exit':[t for t in bt['transitions']['Composite + Blow-off Exit'] if t[1]==0][-1][0],
  'grid_min':min(g['ret26'] for g in grid),'grid_max':max(g['ret26'] for g in grid),'grid_beat':sum(g['ret26']>s26['Buy & Hold']['2026 YTD']['total'] for g in grid),
 })
